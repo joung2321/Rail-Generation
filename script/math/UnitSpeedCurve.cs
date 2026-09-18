@@ -75,6 +75,8 @@ public static class UnitSpeedCurve
 
         Vector3 position = new Vector3(r - r * cos_th, s * MathF.Sin(pitch), -r * sin_th);
         Vector3 front = new Vector3(sin_th, MathF.Tan(pitch), -cos_th).Normalized();
+
+        if(r < 0) { roll = -roll; }
         Vector3 right = GetHorizontalRight(front).Rotated(front, roll);
 
         Basis axes = CalculateAxes(front, right);
