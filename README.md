@@ -1,4 +1,8 @@
-# 🛤️Rail Generation Test
+<div align="center">
+<img alt="icon" src="./assets/icon.svg" />
+<h1 align="center">Rail Generation Test</h1>
+</div>
+
 A simple project testing procedural generation of railway
 
 This project demonstrates :
