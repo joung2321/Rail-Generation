@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://dc21t8vc6hfkc"]
+
+[ext_resource type="Script" uid="uid://lcu1a4d6fq12" path="res://scene/lab/LabRailProfile.cs" id="1_1s8we"]
+[ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="2_022j6"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lhnqc"]
+
+[node name="LabRailProfile" type="Node3D" unique_id=2141553592]
+script = ExtResource("1_1s8we")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1777619305]
+script = ExtResource("2_022j6")
+
+[node name="ground" type="MeshInstance3D" parent="." unique_id=772337405]
+mesh = SubResource("PlaneMesh_lhnqc")
+
+[node name="sun" type="DirectionalLight3D" parent="." unique_id=959446408]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1678668824]
+
+[node name="guide" type="Label" parent="CanvasLayer" unique_id=826602669]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -75.0
+offset_right = 348.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "# Controls
+Move : WASD, Ctrl, Space
+Show / Hide Cursor : Esc / C
+Change Rail Type : 1 (line), 2 (vertical curve), 3 (horizontal curve), 4 (Clothoid)"
+vertical_alignment = 1
