@@ -13,6 +13,7 @@ config_version=5
 config/name="Rail Generation"
 config/description="procedural generation of railway
 developer : Park Jounghyeon (jounghyeon2321@gmail.com)"
+run/main_scene="uid://dc21t8vc6hfkc"
 config/features=PackedStringArray("4.7", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
