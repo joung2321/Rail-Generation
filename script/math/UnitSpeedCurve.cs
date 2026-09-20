@@ -7,24 +7,25 @@ using Godot;
 public static class UnitSpeedCurve
 {
     public readonly record struct Pose
-    (
-        Vector3 Position,
-        Basis Axes,
-        float Gradient_permille,
-        float Roll
-    );
+    {
+        public readonly Vector3 Position;
+        public readonly Basis Axes;
+        public readonly float Bank;
+
+        public Pose(Vector3 position, Basis axes, float bank)
+        {
+            Position = position;
+            Axes = axes;
+            Bank = bank; // bank > 0: positive camber, bank < 0: negative camber
+        }
+
+        public float Gradient_permille => Axes.Column0.Y / MathF.Sqrt(Axes.Column0.X * Axes.Column0.X + Axes.Column0.Z * Axes.Column0.Z) * 1000;
+    };
 
     /* helper methods */
     private static Vector3 GetHorizontalRight(Vector3 front)
     {
-        Vector3 right = front.Cross(Vector3.Up);
-        return right;
-    }
-
-    private static float CalculateGradient(Vector3 front)
-    {
-        float horizontalLengthSquared = front.X * front.X + front.Z * front.Z;
-        return front.Y / MathF.Sqrt(horizontalLengthSquared) * 1000;
+        return front.Cross(Vector3.Up);
     }
 
     private static Basis CalculateAxes(Vector3 front, Vector3 right)
@@ -41,7 +42,7 @@ public static class UnitSpeedCurve
         Basis axes = CalculateAxes(endPoint, Vector3.Right);
 
         // endPoint.Normalized() == -axes.Column2
-        return new Pose(s * -axes.Column2, axes, CalculateGradient(endPoint), 0);
+        return new Pose(s * -axes.Column2, axes, 0);
     }
 
     // arc of a circle in YZ plane whose center is (0, r, 0) and radius is r
@@ -57,17 +58,16 @@ public static class UnitSpeedCurve
 
         Vector3 position = new Vector3(0, r - r * cos_th, -r * sin_th);
         Vector3 front = new Vector3(0, sin_th, -cos_th);
-
         Basis axes = CalculateAxes(front, Vector3.Right);
 
-        return new Pose(position, axes, CalculateGradient(front), 0);
+        return new Pose(position, axes, 0);
     }
 
     // helix C(theta) = <-r * cos(theta), s * sin(pitch), -r * sin(theta)> + <r, 0, 0>
     // s = r * theta / cos(pitch) => C(theta).Y = r * theta * tan(pitch)
     // C'(theta)      = <r * sin(theta), r * tan(pitch), -r * cos(theta)>
     // C'(theta) / r  = <sin(theta), tan(pitch), -cos(theta)>
-    public static Pose HorizontalCurve(float s, float r, float roll, float pitch)
+    public static Pose HorizontalCurve(float s, float r, float bank, float pitch)
     {
         float theta = s * MathF.Cos(pitch) / r;
         float sin_th = MathF.Sin(theta);
@@ -75,17 +75,14 @@ public static class UnitSpeedCurve
 
         Vector3 position = new Vector3(r - r * cos_th, s * MathF.Sin(pitch), -r * sin_th);
         Vector3 front = new Vector3(sin_th, MathF.Tan(pitch), -cos_th).Normalized();
-
-        if(r < 0) { roll = -roll; }
-        Vector3 right = GetHorizontalRight(front).Rotated(front, roll);
-
+        Vector3 right = GetHorizontalRight(front).Rotated(front, r > 0? bank: -bank);
         Basis axes = CalculateAxes(front, right);
 
-        return new Pose(position, axes, CalculateGradient(front), roll);
+        return new Pose(position, axes, bank);
     }
     
     // A^2 = R * L
-    public static Pose Clothoid(float s, float A, float final_r, float final_roll, float pitch)
+    public static Pose Clothoid(float s, float A, float final_r, float final_bank, float pitch)
     {
         float s_xz = s * MathF.Cos(pitch); // horizontal arc length
         float A2 = A * A;
@@ -101,7 +98,7 @@ public static class UnitSpeedCurve
         // A = sqrt(r * s) => C = 1 / A^2
         // r = A^2 / s
         float r = (s_xz > 0)? A2 / s_xz: float.PositiveInfinity;
-        float roll = final_roll * (final_r / r);
+        float bank = final_bank * (final_r / r); // bank and final_r have the same sign
 
         // d/ds theta = 1/r = C * s => theta = 1/2 * C * s^2
         // theta = s^2 / (2 * A^2)
@@ -116,11 +113,11 @@ public static class UnitSpeedCurve
             position.X = -position.X;
             front.X = -front.X;
         }
-
+        
         front = front.Rotated(right, pitch).Normalized(); // XYZ space
-        right = front.Cross(Vector3.Up).Rotated(front, roll); // XYZ space
+        right = front.Cross(Vector3.Up).Rotated(front, bank); // XYZ space
         Basis axes = CalculateAxes(front, right);
         
-        return new Pose(position, axes, 0, roll);
+        return new Pose(position, axes, final_r > 0? bank: -bank);
     }
 }

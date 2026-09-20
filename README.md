@@ -31,7 +31,7 @@ git clone https://github.com/joung2321/Rail-Generation.git
 |Name|Description|
 |-|-|
 |RailProfile.cs|extracts edges with constraints Z = k (or X = k, Y = k).|
-|RailGenerator.cs|extrudes a RailProfile along a unit speed curve.|
+|RailMeshGenerator.cs|extrudes a RailProfile along a unit speed curve.|
 ### 🧰script/utility
 |Name|Description|
 |-|-|

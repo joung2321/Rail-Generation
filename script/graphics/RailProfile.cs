@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-// simple and better RailProfile class
+// a class extracting cross section from mesh
 public class RailProfile
 {
     public enum Axis { None, X, Y, Z }

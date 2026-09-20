@@ -2,18 +2,9 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public class RailGenerator
+public static class RailMeshGenerator
 {
-    private RailProfile _rp;
-    private float _ds;
-
-    public RailGenerator(RailProfile railProfile, float ds)
-    {
-        _rp = railProfile;
-        _ds = ds;
-    }
-
-    public ArrayMesh GenerateLine(float final_s_xz, float final_h)
+    public static ArrayMesh GenerateLine(RailProfile profile, float final_s_xz, float final_h, float ds = 0.5f)
     {
         float final_s = MathF.Sqrt(final_s_xz * final_s_xz + final_h * final_h);
 
@@ -23,66 +14,66 @@ public class RailGenerator
             UnitSpeedCurve.Line(final_s, final_s_xz, final_h)
         };
 
-        return GenerateMesh(poses);
+        return GenerateMesh(profile, poses);
     }
 
-    public ArrayMesh GenerateVerticalCurve(float r, float final_theta)
+    public static ArrayMesh GenerateVerticalCurve(RailProfile profile, float r, float final_theta, float ds = 0.5f)
     {
         float abs_r = (r >= 0)? r: -r;
         float final_s = abs_r * final_theta;
 
-        int poseCount = (int)Math.Ceiling(final_s / _ds) + 1;
+        int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
 
         for(int i=0; i<poseCount; i++)
         {
-            float s = Math.Min(_ds * i, final_s);
+            float s = Math.Min(ds * i, final_s);
             poses[i] = UnitSpeedCurve.VerticalCurve(s, r);
         }
 
-        return GenerateMesh(poses);
+        return GenerateMesh(profile, poses);
     }
 
-    public ArrayMesh GenerateHorizontalCurve(float r, float final_theta, float roll, float pitch)
+    public static ArrayMesh GenerateHorizontalCurve(RailProfile profile, float r, float final_theta, float bank, float pitch, float ds = 0.5f)
     {
         float abs_r = (r >= 0)? r: -r;
         float final_s = abs_r * final_theta / MathF.Cos(pitch);
 
-        int poseCount = (int)Math.Ceiling(final_s / _ds) + 1;
+        int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
 
         for(int i=0; i<poseCount; i++)
         {
-            float s = Math.Min(_ds * i, final_s);
-            poses[i] = UnitSpeedCurve.HorizontalCurve(s, r, roll, pitch);
+            float s = Math.Min(ds * i, final_s);
+            poses[i] = UnitSpeedCurve.HorizontalCurve(s, r, bank, pitch);
         }
 
-        return GenerateMesh(poses);
+        return GenerateMesh(profile, poses);
     }
 
     // A^2 = R * L
-    public ArrayMesh GenerateClothoid(float A, float final_r, float final_roll, float pitch)
+    public static ArrayMesh GenerateClothoid(RailProfile profile, float A, float final_r, float final_bank, float pitch, float ds = 0.5f)
     {
         float abs_r = (final_r >= 0)? final_r: -final_r;
         float final_s = A * A / abs_r;
 
-        int poseCount = (int)Math.Ceiling(final_s / _ds) + 1;
+        int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
 
         for(int i=0; i<poseCount; i++)
         {
-            float s = Math.Min(_ds * i, final_s);
-            poses[i] = UnitSpeedCurve.Clothoid(s, A, final_r, final_roll, pitch);
+            float s = Math.Min(ds * i, final_s);
+            poses[i] = UnitSpeedCurve.Clothoid(s, A, final_r, final_bank, pitch);
         }
 
-        return GenerateMesh(poses);
+        return GenerateMesh(profile, poses);
     }
 
-    private ArrayMesh GenerateMesh(UnitSpeedCurve.Pose[] poses)
+    public static ArrayMesh GenerateMesh(RailProfile profile, UnitSpeedCurve.Pose[] poses)
     {
-        ReadOnlySpan<Vector3> profile_vArr = _rp.Vertices;
-        ReadOnlySpan<Vector2> profile_vtArr = _rp.UVs;
-        ReadOnlySpan<Vector3> profile_vnArr = _rp.Normals;
+        ReadOnlySpan<Vector3> profile_vArr = profile.Vertices;
+        ReadOnlySpan<Vector2> profile_vtArr = profile.UVs;
+        ReadOnlySpan<Vector3> profile_vnArr = profile.Normals;
 
         if(profile_vArr.Length == 0 || poses.Length < 2) { return null; }
         
