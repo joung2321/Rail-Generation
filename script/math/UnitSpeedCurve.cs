@@ -33,6 +33,30 @@ public static class UnitSpeedCurve
         return new Basis(right, right.Cross(front), -front).Orthonormalized();
     }
 
+    /* length of curves C(s) */
+    public static float LengthOfLine(float final_s_xz, float final_h)
+    {
+        return MathF.Sqrt(final_s_xz * final_s_xz + final_h * final_h);
+    }
+
+    public static float LengthOfVerticalCurve(float r, float final_theta)
+    {
+        if(r < 0) { r = -r; }
+        return r * final_theta;
+    }
+
+    public static float LengthOfHorizontalCurve(float r, float final_theta, float pitch)
+    {
+        if(r < 0) { r = -r; }
+        return r * final_theta / MathF.Cos(pitch);
+    }
+
+    public static float LengthOfClothoid(float A, float final_r, float pitch)
+    {
+        if(final_r < 0) { final_r = -final_r; }
+        return A * A / final_r / MathF.Cos(pitch); // A^2 = R * L
+    }
+
     /* curves C(s) parameterized by arc length s */
     // let P = endPoint, final_s = |P|
     // then, C(s) = s * (P / |P|)

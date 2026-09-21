@@ -6,7 +6,7 @@ public static class RailMeshGenerator
 {
     public static ArrayMesh GenerateLine(RailProfile profile, float final_s_xz, float final_h, float ds = 0.5f)
     {
-        float final_s = MathF.Sqrt(final_s_xz * final_s_xz + final_h * final_h);
+        float final_s = UnitSpeedCurve.LengthOfLine(final_s_xz, final_h);
 
         UnitSpeedCurve.Pose[] poses =
         {
@@ -19,8 +19,7 @@ public static class RailMeshGenerator
 
     public static ArrayMesh GenerateVerticalCurve(RailProfile profile, float r, float final_theta, float ds = 0.5f)
     {
-        float abs_r = (r >= 0)? r: -r;
-        float final_s = abs_r * final_theta;
+        float final_s = UnitSpeedCurve.LengthOfVerticalCurve(r, final_theta);
 
         int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
@@ -36,8 +35,7 @@ public static class RailMeshGenerator
 
     public static ArrayMesh GenerateHorizontalCurve(RailProfile profile, float r, float final_theta, float bank, float pitch, float ds = 0.5f)
     {
-        float abs_r = (r >= 0)? r: -r;
-        float final_s = abs_r * final_theta / MathF.Cos(pitch);
+        float final_s = UnitSpeedCurve.LengthOfHorizontalCurve(r, final_theta, pitch);
 
         int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
@@ -54,9 +52,8 @@ public static class RailMeshGenerator
     // A^2 = R * L
     public static ArrayMesh GenerateClothoid(RailProfile profile, float A, float final_r, float final_bank, float pitch, float ds = 0.5f)
     {
-        float abs_r = (final_r >= 0)? final_r: -final_r;
-        float final_s = A * A / abs_r;
-
+        float final_s = UnitSpeedCurve.LengthOfClothoid(A, final_r, pitch);
+        
         int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
 
