@@ -4,68 +4,6 @@ using System.Collections.Generic;
 
 public static class RailMeshGenerator
 {
-    public static ArrayMesh GenerateLine(RailProfile profile, float final_s_xz, float final_h, float ds = 0.5f)
-    {
-        float final_s = UnitSpeedCurve.LengthOfLine(final_s_xz, final_h);
-
-        UnitSpeedCurve.Pose[] poses =
-        {
-            UnitSpeedCurve.Line(0, final_s_xz, final_h),
-            UnitSpeedCurve.Line(final_s, final_s_xz, final_h)
-        };
-
-        return GenerateMesh(profile, poses);
-    }
-
-    public static ArrayMesh GenerateVerticalCurve(RailProfile profile, float r, float final_theta, float ds = 0.5f)
-    {
-        float final_s = UnitSpeedCurve.LengthOfVerticalCurve(r, final_theta);
-
-        int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
-        UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
-
-        for(int i=0; i<poseCount; i++)
-        {
-            float s = Math.Min(ds * i, final_s);
-            poses[i] = UnitSpeedCurve.VerticalCurve(s, r);
-        }
-
-        return GenerateMesh(profile, poses);
-    }
-
-    public static ArrayMesh GenerateHorizontalCurve(RailProfile profile, float r, float final_theta, float bank, float pitch, float ds = 0.5f)
-    {
-        float final_s = UnitSpeedCurve.LengthOfHorizontalCurve(r, final_theta, pitch);
-
-        int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
-        UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
-
-        for(int i=0; i<poseCount; i++)
-        {
-            float s = Math.Min(ds * i, final_s);
-            poses[i] = UnitSpeedCurve.HorizontalCurve(s, r, bank, pitch);
-        }
-
-        return GenerateMesh(profile, poses);
-    }
-
-    // A^2 = R * L
-    public static ArrayMesh GenerateClothoid(RailProfile profile, float A, float final_r, float final_bank, float pitch, float ds = 0.5f)
-    {
-        float final_s = UnitSpeedCurve.LengthOfClothoid(A, final_r, pitch);
-        
-        int poseCount = (int)Math.Ceiling(final_s / ds) + 1;
-        UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
-
-        for(int i=0; i<poseCount; i++)
-        {
-            float s = Math.Min(ds * i, final_s);
-            poses[i] = UnitSpeedCurve.Clothoid(s, A, final_r, final_bank, pitch);
-        }
-
-        return GenerateMesh(profile, poses);
-    }
-
     public static ArrayMesh GenerateMesh(RailProfile profile, UnitSpeedCurve.Pose[] poses)
     {
         ReadOnlySpan<Vector3> profile_vArr = profile.Vertices;
