@@ -3,7 +3,7 @@ using Godot;
 
 public partial class LabRailProfile : Node3D
 {
-    MeshInstance3D[] _miArr;
+    TrackPiece[] _miArr;
 
     public override void _Ready()
     {
@@ -14,13 +14,15 @@ public partial class LabRailProfile : Node3D
 
         _miArr = new TrackPiece[1+4]; // index: 1~4
 
-        _miArr[1] = new LineTrack().Define(4f, 2f).Bake().GenerateMesh(rp);
-        _miArr[2] = new VerticalCurveTrack().Define(4f, MathF.PI / 3).Bake().GenerateMesh(rp);
-        _miArr[3] = new HorizontalCurveTrack().Define(3f, 4 * MathF.PI, MathF.PI / 8, MathF.PI / 32).Bake().GenerateMesh(rp);
-        _miArr[4] = new ClothoidTrack().Define(8f, 2f, MathF.PI / 8, MathF.PI / 32).Bake().GenerateMesh(rp);
-
+        // define curve shape
+        _miArr[1] = new LineTrack().Define(4f, 2f);
+        _miArr[2] = new VerticalCurveTrack().Define(4f, MathF.PI / 3);
+        _miArr[3] = new HorizontalCurveTrack().Define(3f, 4 * MathF.PI, MathF.PI / 8, MathF.PI / 32);
+        _miArr[4] = new ClothoidTrack().Define(8f, 2f, MathF.PI / 8, MathF.PI / 32);
+        
         for(int i=1; i<_miArr.Length; i++)
         {
+            _miArr[i].Bake().GenerateMesh(rp);
             _miArr[i].Visible = i == 1;
             AddChild(_miArr[i]);
         }

@@ -33,11 +33,10 @@ public abstract partial class TrackPiece : MeshInstance3D
         return this;
     }
 
-    /// <returns>returns itself</returns>
-    public virtual TrackPiece GenerateMesh(RailProfile profile, float ds = 0.5f)
+    public virtual void GenerateMesh(RailProfile profile, float ds = 0.5f)
     {
         int poseCount = (int)Math.Ceiling(TotalLength / ds) + 1;
-        if(poseCount < 2) { return this; }
+        if(poseCount < 2) { return; }
 
         UnitSpeedCurve.Pose[] poses = new UnitSpeedCurve.Pose[poseCount];
 
@@ -53,6 +52,5 @@ public abstract partial class TrackPiece : MeshInstance3D
         }
 
         Mesh = RailMeshGenerator.GenerateMesh(profile, poses);
-        return this;
     }
 }

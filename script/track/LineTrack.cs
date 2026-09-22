@@ -24,11 +24,9 @@ public partial class LineTrack : TrackPiece
         return UnitSpeedCurve.LengthOfLine(_final_s_xz, _final_h);
     }
 
-    public override TrackPiece GenerateMesh(RailProfile profile, float ds = float.PositiveInfinity)
+    public override void GenerateMesh(RailProfile profile, float ds)
     {
         UnitSpeedCurve.Pose[] poses = { InitialPose, FinalPose };
         Mesh = RailMeshGenerator.GenerateMesh(profile, poses);
-
-        return this;
     }
 }
