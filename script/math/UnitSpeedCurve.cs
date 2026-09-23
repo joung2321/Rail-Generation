@@ -122,7 +122,11 @@ public static class UnitSpeedCurve
         // A = sqrt(r * s) => C = 1 / A^2
         // r = A^2 / s
         float r = (s_xz > 0)? A2 / s_xz: float.PositiveInfinity;
-        float bank = final_bank * (final_r / r); // bank and final_r have the same sign
+
+        // apply smoothstep to bank
+        float t = s / (A2 / final_r); // t = s / L
+        if(t < 0) { t = -t; }
+        float bank = final_bank * t * t * (3 - 2 * t);
 
         // d/ds theta = 1/r = C * s => theta = 1/2 * C * s^2
         // theta = s^2 / (2 * A^2)
@@ -139,9 +143,9 @@ public static class UnitSpeedCurve
         }
         
         front = front.Rotated(right, pitch).Normalized(); // XYZ space
-        right = front.Cross(Vector3.Up).Rotated(front, bank); // XYZ space
+        right = front.Cross(Vector3.Up).Rotated(front, final_r >= 0? bank: -bank); // XYZ space
         Basis axes = CalculateAxes(front, right);
         
-        return new Pose(position, axes, final_r > 0? bank: -bank);
+        return new Pose(position, axes, bank);
     }
 }

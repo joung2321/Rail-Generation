@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bs75qqqhutkpm"]
+
+[ext_resource type="Script" uid="uid://cqr7phya8371o" path="res://scene/lab/LabTrackConnector.cs" id="1_n4tat"]
+[ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="1_xf7fv"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_xf7fv"]
+
+[node name="LabTrackConnector" type="Node3D" unique_id=269421330]
+script = ExtResource("1_n4tat")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1397996332]
+script = ExtResource("1_xf7fv")
+
+[node name="ground" type="MeshInstance3D" parent="." unique_id=783034599]
+mesh = SubResource("PlaneMesh_xf7fv")
+
+[node name="sun" type="DirectionalLight3D" parent="." unique_id=1242389972]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
