@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bs75qqqhutkpm"]
 
-[ext_resource type="Script" uid="uid://cqr7phya8371o" path="res://scene/lab/LabTrackConnector.cs" id="1_n4tat"]
+[ext_resource type="Script" uid="uid://gk4wnpf6ko6g" path="res://scene/lab/LabTrackConnector.cs" id="1_n4tat"]
 [ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="1_xf7fv"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_xf7fv"]

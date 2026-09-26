@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public static class RailMeshGenerator
 {
-    public static ArrayMesh GenerateMesh(RailProfile profile, UnitSpeedCurve.Pose[] poses)
+    public static ArrayMesh GenerateMesh(RailProfile profile, Pose[] poses)
     {
         ReadOnlySpan<Vector3> profile_vArr = profile.Vertices;
         ReadOnlySpan<Vector2> profile_vtArr = profile.UVs;

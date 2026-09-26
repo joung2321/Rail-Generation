@@ -16,7 +16,7 @@ public partial class ClothoidTrack : TrackPiece
         return this;
     }
 
-    public override UnitSpeedCurve.Pose C(float s)
+    public override Pose C(float s)
     {
         return UnitSpeedCurve.Clothoid(s, _A, _final_r, _final_bank, _pitch);
     }

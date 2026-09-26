@@ -14,7 +14,7 @@ public partial class LineTrack : TrackPiece
         return this;
     }
 
-    public override UnitSpeedCurve.Pose C(float s)
+    public override Pose C(float s)
     {
         return UnitSpeedCurve.Line(s, _final_s_xz, _final_h);
     }
@@ -26,7 +26,7 @@ public partial class LineTrack : TrackPiece
 
     public override void GenerateMesh(RailProfile profile, float ds)
     {
-        UnitSpeedCurve.Pose[] poses = { InitialPose, FinalPose };
+        Pose[] poses = { InitialPose, FinalPose };
         Mesh = RailMeshGenerator.GenerateMesh(profile, poses);
     }
 }

@@ -12,7 +12,7 @@ public partial class VerticalCurveTrack : TrackPiece
         return this;
     }
     
-    public override UnitSpeedCurve.Pose C(float s)
+    public override Pose C(float s)
     {
         return UnitSpeedCurve.VerticalCurve(s, _r);
     }

@@ -16,7 +16,7 @@ public partial class HorizontalCurveTrack : TrackPiece
         return this;
     }
 
-    public override UnitSpeedCurve.Pose C(float s)
+    public override Pose C(float s)
     {
         return UnitSpeedCurve.HorizontalCurve(s, _r, _bank, _pitch);
     }
