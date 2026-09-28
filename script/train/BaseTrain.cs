@@ -5,6 +5,8 @@ using static BasisMath;
 
 public class BaseTrain
 {
+    public event Action EndOfLineReached;
+    
     private TrackPiece _track = null;
     private float _s; // current arc length starting from _track.InitialPose
     private Terminal _facing = Terminal.None;
@@ -31,7 +33,7 @@ public class BaseTrain
         pos = _track.Transform * pos;
         axes = _track.Basis * axes;
 
-        return new Pose(pos, axes, localPose.Bank);
+        return new Pose(pos, axes, localPose.Bank, localPose.R);
     }
 
     public void Move(float ds)
@@ -77,5 +79,7 @@ public class BaseTrain
                 break;
             }
         }
+
+        if(_track == null) { EndOfLineReached?.Invoke(); }
     }
 }

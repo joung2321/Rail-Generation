@@ -86,7 +86,7 @@ public static class UnitSpeedCurve
         Vector3 right = GetHorizontalRight(front).Rotated(front, r > 0? bank: -bank);
         Basis axes = CalculateAxes(front, right);
 
-        return new Pose(position, axes, bank);
+        return new Pose(position, axes, bank, r);
     }
     
     // A^2 = R * L
@@ -130,6 +130,6 @@ public static class UnitSpeedCurve
         right = front.Cross(Vector3.Up).Rotated(front, final_r >= 0? bank: -bank); // XYZ space
         Basis axes = CalculateAxes(front, right);
         
-        return new Pose(position, axes, bank);
+        return new Pose(position, axes, bank, r);
     }
 }
