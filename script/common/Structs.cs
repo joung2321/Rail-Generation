@@ -17,6 +17,6 @@ public readonly record struct Pose
         Bank = bank;
         R = r;
     }
-    
-    public float Gradient_permille => Axes.Column0.Y / MathF.Sqrt(Axes.Column0.X * Axes.Column0.X + Axes.Column0.Z * Axes.Column0.Z) * 1000;
+
+    public float Gradient_permille => -Axes.Column2.Y / MathF.Sqrt(Axes.Column2.X * Axes.Column2.X + Axes.Column2.Z * Axes.Column2.Z) * 1000;
 };
