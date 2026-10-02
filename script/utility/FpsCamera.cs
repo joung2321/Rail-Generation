@@ -50,7 +50,7 @@ public partial class FpsCamera : Camera3D
         if(Input.IsKeyPressed(Key.Ctrl)) { up--; }
 
         Vector3 v = new Vector3(right, up, -front).Normalized();
-        Position += dt * _linearSpeed * (GlobalTransform.Basis * v);
+        Position += dt * _linearSpeed * (Transform.Basis * v);
     }
     public override void _UnhandledInput(InputEvent @event)
     {
