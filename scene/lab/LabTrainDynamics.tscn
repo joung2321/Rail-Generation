@@ -1,0 +1,140 @@
+[gd_scene format=3 uid="uid://bs75qqqhutkpm"]
+
+[ext_resource type="Script" uid="uid://gk4wnpf6ko6g" path="res://scene/lab/LabTrainDynamics.cs" id="1_m8a7j"]
+[ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="2_e5bpm"]
+[ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/lab/LargeText.tres" id="3_e5bpm"]
+
+[sub_resource type="PrismMesh" id="PrismMesh_5dtft"]
+size = Vector3(0.5, 1, 0.5)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lhnqc"]
+size = Vector2(1, 0.05)
+
+[node name="LabTrainDynamics" type="Node3D" unique_id=269421330 node_paths=PackedStringArray("_labelReverser", "_labelNotch", "_labelV", "_labelPR", "_labelCR", "_labelGR", "_train")]
+script = ExtResource("1_m8a7j")
+_labelReverser = NodePath("CanvasLayer/dashboard/reverser")
+_labelNotch = NodePath("CanvasLayer/dashboard/notch")
+_labelV = NodePath("CanvasLayer/dashboard/V/V_value")
+_labelPR = NodePath("CanvasLayer/resistance/PR/PR_value")
+_labelCR = NodePath("CanvasLayer/resistance/CR/CR_value")
+_labelGR = NodePath("CanvasLayer/resistance/GR/GR_value")
+_train = NodePath("train")
+
+[node name="sun" type="DirectionalLight3D" parent="." unique_id=1242389972]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
+
+[node name="train" type="Node3D" parent="." unique_id=819704380]
+
+[node name="Camera3D" type="Camera3D" parent="train" unique_id=1397996332]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 1.5, 1.5)
+script = ExtResource("2_e5bpm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="train" unique_id=177312461]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+mesh = SubResource("PrismMesh_5dtft")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="train" unique_id=1457645504]
+mesh = SubResource("PlaneMesh_lhnqc")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=330144053]
+
+[node name="guide" type="Label" parent="CanvasLayer" unique_id=983291935]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -35.5
+offset_bottom = 35.5
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("3_e5bpm")
+text = "# Controls
+- Camera
+Move : WASD, Ctrl, Space
+
+- Reverser
+Forward : Up (↑)
+Neutral : Left / Right (←/→)
+Reverse : Down (↓)
+
+- Notch
+to Brake : Mouse Wheel Up
+to Power : Mouse Wheel Down"
+
+[node name="dashboard" type="VBoxContainer" parent="CanvasLayer" unique_id=1059531187]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -110.0
+offset_right = 85.0
+grow_vertical = 0
+theme = ExtResource("3_e5bpm")
+
+[node name="reverser" type="Label" parent="CanvasLayer/dashboard" unique_id=1128874700]
+layout_mode = 2
+
+[node name="notch" type="Label" parent="CanvasLayer/dashboard" unique_id=1785298258]
+layout_mode = 2
+
+[node name="V" type="HBoxContainer" parent="CanvasLayer/dashboard" unique_id=1584322661]
+layout_mode = 2
+
+[node name="V_name" type="Label" parent="CanvasLayer/dashboard/V" unique_id=357561948]
+layout_mode = 2
+text = "V"
+
+[node name="V_value" type="Label" parent="CanvasLayer/dashboard/V" unique_id=1327174511]
+layout_mode = 2
+
+[node name="V_unit" type="Label" parent="CanvasLayer/dashboard/V" unique_id=977270278]
+layout_mode = 2
+text = "km/h"
+
+[node name="resistance" type="VBoxContainer" parent="CanvasLayer" unique_id=602416740]
+offset_right = 40.0
+offset_bottom = 40.0
+theme = ExtResource("3_e5bpm")
+
+[node name="PR" type="HBoxContainer" parent="CanvasLayer/resistance" unique_id=981936002]
+layout_mode = 2
+
+[node name="PR_name" type="Label" parent="CanvasLayer/resistance/PR" unique_id=575476586]
+layout_mode = 2
+text = "PR"
+
+[node name="PR_value" type="Label" parent="CanvasLayer/resistance/PR" unique_id=2118377255]
+layout_mode = 2
+
+[node name="PR_unit" type="Label" parent="CanvasLayer/resistance/PR" unique_id=537194264]
+layout_mode = 2
+text = "N/t"
+
+[node name="CR" type="HBoxContainer" parent="CanvasLayer/resistance" unique_id=1935718808]
+layout_mode = 2
+
+[node name="CR_name" type="Label" parent="CanvasLayer/resistance/CR" unique_id=842686762]
+layout_mode = 2
+text = "CR"
+
+[node name="CR_value" type="Label" parent="CanvasLayer/resistance/CR" unique_id=1107376978]
+layout_mode = 2
+
+[node name="CR_unit" type="Label" parent="CanvasLayer/resistance/CR" unique_id=2106487104]
+layout_mode = 2
+text = "N/t"
+
+[node name="GR" type="HBoxContainer" parent="CanvasLayer/resistance" unique_id=1366394665]
+layout_mode = 2
+
+[node name="GR_name" type="Label" parent="CanvasLayer/resistance/GR" unique_id=2032642889]
+layout_mode = 2
+text = "GR"
+
+[node name="GR_value" type="Label" parent="CanvasLayer/resistance/GR" unique_id=1974002178]
+layout_mode = 2
+
+[node name="GR_unit" type="Label" parent="CanvasLayer/resistance/GR" unique_id=104341613]
+layout_mode = 2
+text = "N/t"

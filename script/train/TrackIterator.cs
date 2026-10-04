@@ -3,7 +3,7 @@ using System;
 
 using static BasisMath;
 
-public class BaseTrain
+public class TrackIterator
 {
     public event Action EndOfLineReached;
     
@@ -11,7 +11,7 @@ public class BaseTrain
     private float _s; // current arc length starting from _track.InitialPose
     private Terminal _facing = Terminal.None;
 
-    public BaseTrain(TrackPiece track, float s, Terminal facing)
+    public TrackIterator(TrackPiece track, float s, Terminal facing)
     {
         _track = track;
         _s = s;
