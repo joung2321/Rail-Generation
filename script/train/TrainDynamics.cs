@@ -5,28 +5,47 @@ public class TrainDynamics
 {
     private const float g = 9.80665f; // acceleration of gravity [m/s^2]
 
+    // shape
     private float _G_m; // gauge [m]
+    private float _L_m; // wheelbase in a bogie [m]
+    private float _W_t; // weight [t]
 
     // starting resistance
     private float _SR_Npt;
-    private float _SR3kph_Npt; // pre-calculated starting resistance at v = 3 km/h
 
     // propulsion resistance
     private float _a, _b, _c;
+    private float _PR3kph_Npt; // pre-calculated propulsion resistance at v = 3 km/h
 
     // curving resistance
-    private float _mu; // coefficient of friction
+    private float _mu; // coefficient of friction [1; dimensionless]
 
-    public TrainDynamics(float G_m, float SR_Npt, float a, float b, float c, float mu)
+    // pre-calculates propulsion resistance at v = 3 km/h
+    private void BakePR3kph()
     {
+        _PR3kph_Npt = g * (_a + _b * 3 + _c * 9 / _W_t);
+    }
+
+    public TrainDynamics(float G_m, float L_m, float W_t, float SR_Npt, float a, float b, float c, float mu)
+    {
+        // shape
         _G_m = G_m;
+        _L_m = L_m;
+        _W_t = W_t;
+
+        // SR
         _SR_Npt = SR_Npt;
+
+        // PR
         _a = a;
         _b = b;
         _c = c;
+
+        // CR
         _mu = mu;
 
-        _SR3kph_Npt = a + b * 3 + c * 9;
+        // pre-calculate propulsion resistance at v = 3 km/h
+        BakePR3kph();
     }
 
     /// <summary>
@@ -39,11 +58,11 @@ public class TrainDynamics
         if(v_kph <= 3f) // starting resistance
         {
             float t = v_kph / 3f;
-            return _SR_Npt * (1 - t) + _SR3kph_Npt * t;
+            return _SR_Npt * (1 - t) + _PR3kph_Npt * t;
         }
         else // propulsion resistance
         {
-            return _a + _b * v_kph + _c * v_kph * v_kph;
+            return g * (_a + _b * v_kph + _c * v_kph * v_kph / _W_t);
         }
     }
 
@@ -59,22 +78,22 @@ public class TrainDynamics
     /// calculates curving resistance [N/t]
     /// </summary>
     /// <param name="L_m">wheelbase</param>
-    public float CalculateCR(float r_m, float L_m)
+    public float CalculateCR(float r_m)
     {
         if(r_m <= 0) { return 0; }
-        return g * 1000 * _mu * (_G_m + L_m) / (2 * r_m);
+        return g * 1000 * _mu * (_G_m + _L_m) / (2 * r_m);
     }
 
     /// <summary>
-    /// calculates velocity after delta [s]
+    /// calculates velocity [km/h] after delta [s]
     /// </summary>
     /// <param name="traction_N">(-) : brake, 0 : neutral, (+) : power</param>
-    public float UpdateVelocity(double delta_s, Pose pose, float v_kph, Reverser reverser, float traction_N, float L_m, float W_t)
+    public float UpdateVelocity(double delta_s, Pose pose, float v_kph, Reverser reverser, float traction_N)
     {
         float dt_s = (float)delta_s;
 
-        float gr_N = W_t * CalculateGR(pose.Gradient_permille);
-        float absFriction_N = W_t * (CalculatePR(v_kph) + CalculateCR(pose.R, L_m)); // always greater than 0
+        float gr_N = _W_t * CalculateGR(pose.Gradient_permille);
+        float absFriction_N = _W_t * (CalculatePR(v_kph) + CalculateCR(pose.R)); // always greater than 0
 
         // i) brake or power
         if(traction_N < 0) // brake: consider traction as friction
@@ -98,7 +117,7 @@ public class TrainDynamics
             // m/s  = N / kg * s
             // km/h = 1000m / 3600s = m/s / 3.6
             // 3.6 km/h = 1 m/s
-            v_kph += 3.6f * (traction_N - Math.Sign(v_kph) * absFriction_N) / (1000 * W_t) * dt_s;
+            v_kph += 3.6f * (traction_N - Math.Sign(v_kph) * absFriction_N) / (1000 * _W_t) * dt_s;
 
             if(Math.Sign(v_kph) == Math.Sign(prev_v)) { return v_kph; }
             else { return 0; }
@@ -107,7 +126,7 @@ public class TrainDynamics
         {
             float absSumF = Math.Abs(traction_N) - absFriction_N;
 
-            if(absSumF > 0) { return Math.Sign(traction_N) * 3.6f * absSumF / (1000 * W_t) * dt_s; } // 3.6 km/h = 1 m/s
+            if(absSumF > 0) { return Math.Sign(traction_N) * 3.6f * absSumF / (1000 * _W_t) * dt_s; } // 3.6 km/h = 1 m/s
             else { return 0; }
         }
     }

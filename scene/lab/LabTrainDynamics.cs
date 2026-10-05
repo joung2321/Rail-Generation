@@ -12,9 +12,16 @@ public partial class LabTrainDynamics : Node3D
 
     [Export] private Node3D _train;
     
-    private float[] _tractionArr = { -100000f, -80000f, -40000f, -0, 40000f, 60000f, 90000f, 120000f };
-    private const int NeutralNotch = 3;
-    private int _notch = NeutralNotch;
+    // traction [N] of each notch
+    private float[] _tractionArr =
+    {
+        -250000f, -194400f, -166600f, -138800f, -111200f, -83400f, -55600f, -27800f,
+        0,
+        41600f, 83400f, 125000f, 166600f
+    };
+
+    private const int NeutralNotch = 8;
+    private int _notch = 0; // EB
 
     private float _v_kph = 0;
     private float _traction_N = 0;
@@ -67,7 +74,8 @@ public partial class LabTrainDynamics : Node3D
         _ti = new TrackIterator(tpArr[0], 0, Terminal.Final);
 
         // train dynamics
-        _td = new TrainDynamics(1.435f, 90f, 15f, 0.226f, 0.054f, 0.4f);
+        // model: KORAIL Class 351000 EMU
+        _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
 
         // debug
         UpdateNotchLabel();
@@ -78,8 +86,12 @@ public partial class LabTrainDynamics : Node3D
     {
         Pose p = _ti.GetPose();
 
-        float next_v = _td.UpdateVelocity(delta, p, _v_kph, _reverser, _tractionArr[_notch], 2.1f, 369.1f);
-        _ti.Move((_v_kph + next_v) / 2 * (float)delta);
+        // maximum speed
+        float traction = _tractionArr[_notch];
+        if(_v_kph >= 110f) { traction = 0; }
+
+        float next_v = _td.UpdateVelocity(delta, p, _v_kph, _reverser, traction);
+        _ti.Move((_v_kph + next_v) / 2 * (float)delta / 3.6f); // 3.6 km/h = 1 m/s
         _v_kph = next_v;
 
         if(_train != null)
@@ -92,7 +104,7 @@ public partial class LabTrainDynamics : Node3D
         // debug
         _labelV.Text = Math.Round(_v_kph, 1).ToString();
         _labelPR.Text = Math.Round(_td.CalculatePR(_v_kph)).ToString();
-        _labelCR.Text = Math.Round(_td.CalculateCR(p.R, 2.1f)).ToString();
+        _labelCR.Text = Math.Round(_td.CalculateCR(p.R)).ToString();
         _labelGR.Text = Math.Round(_td.CalculateGR(p.Gradient_permille)).ToString();
     }
 
