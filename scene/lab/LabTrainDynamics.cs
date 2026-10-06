@@ -11,13 +11,14 @@ public partial class LabTrainDynamics : Node3D
     [Export] private Label _labelGR;
 
     [Export] private Node3D _train;
-    
-    // traction [N] of each notch
-    private float[] _tractionArr =
+
+    // proportion of notch output
+    private float[] _commandRatioArr =
     {
-        -250000f, -194400f, -166600f, -138800f, -111200f, -83400f, -55600f, -27800f,
-        0,
-        41600f, 83400f, 125000f, 166600f
+        1.5f, // EB
+        1f, 6/7f, 5/7f, 4/7f, 3/7f, 2/7f, 1/7f, // B7~B1
+        0, // N
+        0.25f, 0.5f, 0.75f, 1f // P1~P4
     };
 
     private const int NeutralNotch = 8;
@@ -28,6 +29,8 @@ public partial class LabTrainDynamics : Node3D
     private Reverser _reverser = Reverser.Neutral;
     private TrackIterator _ti;
     private TrainDynamics _td;
+    private TractiveEffortCurve _tec;
+    private BrakingEffortCurve _bec;
 
     public override void _Ready()
     {
@@ -76,6 +79,8 @@ public partial class LabTrainDynamics : Node3D
         // train dynamics
         // model: KORAIL Class 351000 EMU
         _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
+        _tec = new TractiveEffortCurve(166600f, (0.29f * 166600f) * 120f);
+        _bec = new BrakingEffortCurve(5f, 194400f, (0.29f * 194400f) * 120f);
 
         // debug
         UpdateNotchLabel();
@@ -86,11 +91,11 @@ public partial class LabTrainDynamics : Node3D
     {
         Pose p = _ti.GetPose();
 
-        // maximum speed
-        float traction = _tractionArr[_notch];
-        if(_v_kph >= 110f) { traction = 0; }
+        float force_N = _commandRatioArr[_notch];
+        if(_notch < NeutralNotch) { force_N *= -_bec.F(_v_kph); }
+        else { force_N *= _tec.F(_v_kph); }
 
-        float next_v = _td.UpdateVelocity(delta, p, _v_kph, _reverser, traction);
+        float next_v = _td.UpdateVelocity(delta, p, _v_kph, _reverser, force_N);
         _ti.Move((_v_kph + next_v) / 2 * (float)delta / 3.6f); // 3.6 km/h = 1 m/s
         _v_kph = next_v;
 
@@ -149,15 +154,15 @@ public partial class LabTrainDynamics : Node3D
                 case MouseButton.WheelUp:
                 _notch--;
                 if(_notch < 0) { _notch = 0; }
+                UpdateNotchLabel();
                 break;
 
                 case MouseButton.WheelDown:
                 _notch++;
-                if(_notch >= _tractionArr.Length) { _notch = _tractionArr.Length - 1; }
+                if(_notch >= _commandRatioArr.Length) { _notch = _commandRatioArr.Length - 1; }
+                UpdateNotchLabel();
                 break;
             }
-
-            UpdateNotchLabel();
         }
     }
 
@@ -170,19 +175,20 @@ public partial class LabTrainDynamics : Node3D
             {
                 case Key.Up:
                 _reverser = Reverser.Forward;
+                UpdateReverserLabel();
                 break;
 
                 case Key.Left:
                 case Key.Right:
                 _reverser = Reverser.Neutral;
+                UpdateReverserLabel();
                 break;
 
                 case Key.Down:
                 _reverser = Reverser.Reverse;
+                UpdateReverserLabel();
                 break;
             }
-
-            UpdateReverserLabel();
         }
     }
 }
