@@ -11,7 +11,7 @@ public class TrainDynamics
     private float _W_t; // weight [t]
 
     // starting resistance
-    private float _SR_Npt;
+    private float _SR_Npt; // starting resistance at v = 0 km/h
 
     // propulsion resistance
     private float _a, _b, _c;
@@ -83,51 +83,59 @@ public class TrainDynamics
         if(r_m <= 0) { return 0; }
         return g * 1000 * _mu * (_G_m + _L_m) / (2 * r_m);
     }
-
+    
     /// <summary>
     /// calculates velocity [km/h] after delta [s]
     /// </summary>
-    /// <param name="traction_N">(-) : brake, 0 : neutral, (+) : power</param>
-    public float UpdateVelocity(double delta_s, Pose pose, float v_kph, Reverser reverser, float traction_N)
+    public float UpdateVelocity(double delta_s, float v_kph, float absFriction_N, float traction_N)
     {
+        if(absFriction_N < 0) { absFriction_N = -absFriction_N; }
+
         float dt_s = (float)delta_s;
 
-        float gr_N = _W_t * CalculateGR(pose.Gradient_permille);
-        float absFriction_N = _W_t * (CalculatePR(v_kph) + CalculateCR(pose.R)); // always greater than 0
-
-        // i) brake or power
-        if(traction_N < 0) // brake: consider traction as friction
-        {
-            absFriction_N -= traction_N;
-            traction_N = 0;
-        }
-
-        // ii) consider reverser
-        if(reverser == Reverser.Neutral) { traction_N = 0; }
-        else if(reverser == Reverser.Reverse) { traction_N = -traction_N; }
-
-        // iii) consider gradient as traction
-        traction_N -= gr_N;
-
-        /* update velocity */
         if(v_kph != 0)
         {
             float prev_v = v_kph;
 
-            // m/s  = N / kg * s
-            // km/h = 1000m / 3600s = m/s / 3.6
+            // dv = F / m * dt
             // 3.6 km/h = 1 m/s
             v_kph += 3.6f * (traction_N - Math.Sign(v_kph) * absFriction_N) / (1000 * _W_t) * dt_s;
 
-            if(Math.Sign(v_kph) == Math.Sign(prev_v)) { return v_kph; }
+            if(prev_v * v_kph > 0) { return v_kph; }
             else { return 0; }
         }
-        else // v == 0
+        else
         {
             float absSumF = Math.Abs(traction_N) - absFriction_N;
 
-            if(absSumF > 0) { return Math.Sign(traction_N) * 3.6f * absSumF / (1000 * _W_t) * dt_s; } // 3.6 km/h = 1 m/s
+            if(absSumF > 0) { return Math.Sign(traction_N) * 3.6f * absSumF / (1000 * _W_t) * dt_s; }
             else { return 0; }
         }
+    }
+
+    /// <summary>
+    /// calculates velocity [km/h] after delta [s]
+    /// </summary>
+    /// <param name="commandForce_N">(-) : brake, 0 : neutral, (+) : power</param>
+    public float UpdateVelocity(double delta_s, Pose pose, float v_kph, Reverser reverser, float commandForce_N)
+    {
+        float absFriction_N = _W_t * (CalculatePR(v_kph) + CalculateCR(pose.R));
+        float gr_N = _W_t * CalculateGR(pose.Gradient_permille);
+
+        // 1. command force as brake
+        if(commandForce_N < 0)
+        {
+            absFriction_N -= commandForce_N;
+            commandForce_N = 0;
+        }
+
+        // 2. consider reverser
+        if(reverser == Reverser.Neutral) { commandForce_N = 0; }
+        if(reverser == Reverser.Reverse) { commandForce_N = -commandForce_N; }
+        
+        // 3. consider gradient resistance as traction
+        commandForce_N -= gr_N;
+
+        return UpdateVelocity(delta_s, v_kph, absFriction_N, commandForce_N);
     }
 }
