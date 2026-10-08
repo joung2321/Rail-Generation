@@ -21,7 +21,7 @@ public partial class LabTrainDynamics : Node3D
         0.25f, 0.5f, 0.75f, 1f // P1~P4
     };
 
-    private const int NeutralNotch = 8;
+    private const int NeutralNotch = 8; // N
     private int _notch = 0; // EB
 
     private float _v_kph = 0;
@@ -29,9 +29,11 @@ public partial class LabTrainDynamics : Node3D
     private Reverser _reverser = Reverser.Neutral;
     private TrackIterator _ti;
     private TrainDynamics _td;
-    private TractiveEffortCurve _tec;
-    private BrakingEffortCurve _bec;
-
+    private NormalizedTractiveEffortCurve _ntec;
+    private NormalizedBrakingEffortCurve _nbec;
+    private float _100pctTractiveForce_N;
+    private float _100pctBrakingForce_N;
+    
     public override void _Ready()
     {
         FresnelIntegral.Approximate(20);
@@ -79,8 +81,10 @@ public partial class LabTrainDynamics : Node3D
         // train dynamics
         // model: KORAIL Class 351000 EMU
         _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
-        _tec = new TractiveEffortCurve(166600f, (0.29f * 166600f) * 120f);
-        _bec = new BrakingEffortCurve(5f, 194400f, (0.29f * 194400f) * 120f);
+        _ntec = new NormalizedTractiveEffortCurve(35f, 65f);
+        _nbec = new NormalizedBrakingEffortCurve(5f, 65f);
+        _100pctTractiveForce_N = 1000f * 200f * (3f / 3.6f); // m = 200 t, a = 3 km/h/s
+        _100pctBrakingForce_N = 1000f * 200f * (3.5f / 3.6f); // m = 200 t, a = 3.5 km/h/s
 
         // debug
         UpdateNotchLabel();
@@ -92,9 +96,9 @@ public partial class LabTrainDynamics : Node3D
         Pose p = _ti.GetPose();
 
         float force_N = _commandRatioArr[_notch];
-        if(_notch < NeutralNotch) { force_N *= -_bec.F(_v_kph); }
-        else { force_N *= _tec.F(_v_kph); }
-
+        if(_notch < NeutralNotch) { force_N *= -_nbec.F(_v_kph) * _100pctBrakingForce_N; }
+        else { force_N *= _ntec.F(_v_kph) * _100pctTractiveForce_N; }
+        
         float next_v = _td.UpdateVelocity(delta, p, _v_kph, _reverser, force_N);
         _ti.Move((_v_kph + next_v) / 2 * (float)delta / 3.6f); // 3.6 km/h = 1 m/s
         _v_kph = next_v;

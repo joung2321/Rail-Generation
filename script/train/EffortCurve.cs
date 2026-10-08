@@ -1,63 +1,50 @@
 /// <summary>
-/// tractive effort curve using F0(v) = k0, F1(v) = k1 / v
+/// normalized tractive effort curve with max(F_tractive) = 1
 /// </summary>
-public readonly record struct TractiveEffortCurve
+public readonly record struct NormalizedTractiveEffortCurve
 {
-    private readonly float _k0_N;
-    private readonly float _k1_Nkph;
-    private readonly float _v01_kph;
+    private readonly float _v1_kph;
+    private readonly float _v2_kph;
+    private readonly float _k2_kph;
 
-    /// <summary>
-    /// defines tractive effort curve using F0(v) = k0, F1(v) = k1 / v
-    /// </summary>
-    /// <param name="k0_N">[N]</param>
-    /// <param name="k1">[N * kph]</param>
-    public TractiveEffortCurve(float k0_N, float k1_Nkph)
+    public NormalizedTractiveEffortCurve(float v1_kph, float v2_kph)
     {
-        _k0_N = k0_N;
-        _k1_Nkph = k1_Nkph;
-
-        _v01_kph = k1_Nkph / k0_N;
+        _v1_kph = v1_kph;
+        _v2_kph = v2_kph;
+        _k2_kph = v1_kph * v2_kph;
     }
 
     public float F(float v_kph)
     {
         if(v_kph < 0) { v_kph = -v_kph; }
 
-        if(v_kph <= _v01_kph) { return _k0_N; }
-        else { return _k1_Nkph / v_kph; }
+        if(v_kph <= _v1_kph) { return 1f; }
+        else if(v_kph <= _v2_kph) { return _v1_kph / v_kph; }
+        else { return _k2_kph / (v_kph * v_kph); }
     }
 }
 
 /// <summary>
-/// braking effort curve using F0(v) = k1 * (v / v01), F1(v) = k1, F2(v) = k2 / v
+/// normalized braking effort curve with max(F_braking) = 1
 /// </summary>
-public readonly record struct BrakingEffortCurve
+public readonly record struct NormalizedBrakingEffortCurve
 {
-    private readonly float _k1_N;
-    private readonly float _k2_Nkph;
-    private readonly float _v01_kph;
-    private readonly float _v12_kph;
+    private readonly float _v1_kph;
+    private readonly float _v2_kph;
 
-    /// <summary>
-    /// defines braking effort curve using F0(v) = k1 * (v / v01), F1(v) = k1, F2(v) = k2 / v
-    /// </summary>
-    public BrakingEffortCurve(float v01_kph, float k1_N, float k2_Nkph)
+    public NormalizedBrakingEffortCurve(float v1_kph, float v2_kph)
     {
-        _k1_N = k1_N;
-        _k2_Nkph = k2_Nkph;
-
-        _v01_kph = v01_kph;
-        _v12_kph = k2_Nkph / k1_N;
+        _v1_kph = v1_kph;
+        _v2_kph = v2_kph;
     }
 
     public float F(float v_kph)
     {
         if(v_kph < 0) { v_kph = -v_kph; }
 
-        if(v_kph == 0) { return _k1_N; }
-        else if(v_kph < _v01_kph) { return _k1_N * v_kph / _v01_kph; }
-        else if(v_kph < _v12_kph) { return _k1_N; }
-        else { return _k2_Nkph / v_kph; }
+        if(v_kph == 0) { return 1; }
+        else if(v_kph < _v1_kph) { return v_kph / _v1_kph; }
+        else if(v_kph <= _v2_kph) { return 1f; }
+        else { return _v2_kph / v_kph; }
     }
 }
