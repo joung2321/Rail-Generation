@@ -5,17 +5,31 @@ using static BasisMath;
 
 public class TrackIterator
 {
-    public event Action EndOfLineReached;
+    public event Action Derailed;
     
-    private TrackPiece _track = null;
+    private TrackPiece _track;
     private float _s; // current arc length starting from _track.InitialPose
-    private Terminal _facing = Terminal.None;
+    private Terminal _facing;
+    
+    public TrackIterator()
+    {
+        _track = null;
+        _s = 0;
+        _facing = Terminal.None;
+    }
 
-    public TrackIterator(TrackPiece track, float s, Terminal facing)
+    public void Rerail(TrackPiece track, float s, Terminal facing)
     {
         _track = track;
         _s = s;
         _facing = facing;
+    }
+
+    public void Copy(TrackIterator iter)
+    {
+        _track = iter._track;
+        _s = iter._s;
+        _facing = iter._facing;
     }
 
     /// <summary>
@@ -80,6 +94,6 @@ public class TrackIterator
             }
         }
 
-        if(_track == null) { EndOfLineReached?.Invoke(); }
+        if(_track == null) { Derailed?.Invoke(); }
     }
 }

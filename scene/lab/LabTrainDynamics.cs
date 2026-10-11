@@ -76,8 +76,9 @@ public partial class LabTrainDynamics : Node3D
         }
 
         // rerail a train
-        _ti = new TrackIterator(tpArr[0], 0, Terminal.Final);
-
+        _ti = new TrackIterator();
+        _ti.Rerail(tpArr[0], 0, Terminal.Final);
+        
         // train dynamics
         // model: KORAIL Class 351000 EMU
         _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
