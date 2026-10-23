@@ -10,7 +10,7 @@ public partial class LabTrainDynamics : Node3D
     [Export] private Label _labelCR;
     [Export] private Label _labelGR;
 
-    [Export] private Node3D _train;
+    [Export] private TrainCar _train;
 
     // proportion of notch output
     private float[] _commandRatioArr =
@@ -44,8 +44,8 @@ public partial class LabTrainDynamics : Node3D
         TrackPiece[] tpArr = new TrackPiece[4];
 
         tpArr[0] = new LineTrack().Define(20f, 0);
-        tpArr[1] = new HorizontalCurveTrack().Define(258f, MathF.PI / 36, 0, 0);
-        tpArr[2] = new HorizontalCurveTrack().Define(-258f, MathF.PI / 36, 0, 0);
+        tpArr[1] = new HorizontalCurveTrack().Define(8f, MathF.PI, 0, 0);
+        tpArr[2] = new HorizontalCurveTrack().Define(-8f, MathF.PI, 0, 0);
         tpArr[3] = new LineTrack().Define(20f, 0);
 
         foreach(TrackPiece tp in tpArr)
@@ -81,7 +81,7 @@ public partial class LabTrainDynamics : Node3D
         
         // train dynamics
         // model: KORAIL Class 351000 EMU
-        _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
+        _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0f);
         _ntec = new NormalizedTractiveEffortCurve(35f, 65f);
         _nbec = new NormalizedBrakingEffortCurve(5f, 65f);
         _100pctTractiveForce_N = 1000f * 200f * (3f / 3.6f); // m = 200 t, a = 3 km/h/s
@@ -106,9 +106,7 @@ public partial class LabTrainDynamics : Node3D
 
         if(_train != null)
         {
-            p = _ti.GetPose();
-            _train.Position = p.Position;
-            _train.Basis = p.Axes;
+            _train.UpdatePosition(_ti);
         }
 
         // debug

@@ -1,14 +1,15 @@
 [gd_scene format=3 uid="uid://bs75qqqhutkpm"]
 
 [ext_resource type="Script" uid="uid://gk4wnpf6ko6g" path="res://scene/lab/LabTrainDynamics.cs" id="1_m8a7j"]
+[ext_resource type="Script" uid="uid://dtj3jnvc84k4k" path="res://script/train/TrainCar.cs" id="2_2nygj"]
 [ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="2_e5bpm"]
 [ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/lab/LargeText.tres" id="3_e5bpm"]
 
-[sub_resource type="PrismMesh" id="PrismMesh_5dtft"]
-size = Vector3(0.5, 1, 0.5)
+[sub_resource type="BoxMesh" id="BoxMesh_5dtft"]
+size = Vector3(0.25, 0.25, 8)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_lhnqc"]
-size = Vector2(1, 0.05)
+[sub_resource type="BoxMesh" id="BoxMesh_2r7yk"]
+size = Vector3(0.5, 0.5, 0.5)
 
 [node name="LabTrainDynamics" type="Node3D" unique_id=269421330 node_paths=PackedStringArray("_labelReverser", "_labelNotch", "_labelV", "_labelPR", "_labelCR", "_labelGR", "_train")]
 script = ExtResource("1_m8a7j")
@@ -23,18 +24,26 @@ _train = NodePath("train")
 [node name="sun" type="DirectionalLight3D" parent="." unique_id=1242389972]
 transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
 
-[node name="train" type="Node3D" parent="." unique_id=819704380]
+[node name="train" type="Node3D" parent="." unique_id=819704380 node_paths=PackedStringArray("_frontBogie", "_rearBogie")]
+script = ExtResource("2_2nygj")
+_frontBogie = NodePath("frontBogie")
+_rearBogie = NodePath("rearBogie")
 
 [node name="Camera3D" type="Camera3D" parent="train" unique_id=1397996332]
 transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 1.5, 1.5)
 script = ExtResource("2_e5bpm")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="train" unique_id=177312461]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
-mesh = SubResource("PrismMesh_5dtft")
+[node name="car" type="MeshInstance3D" parent="train" unique_id=1741826157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mesh = SubResource("BoxMesh_5dtft")
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="train" unique_id=1457645504]
-mesh = SubResource("PlaneMesh_lhnqc")
+[node name="frontBogie" type="MeshInstance3D" parent="train" unique_id=496118823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+mesh = SubResource("BoxMesh_2r7yk")
+
+[node name="rearBogie" type="MeshInstance3D" parent="train" unique_id=1403754845]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+mesh = SubResource("BoxMesh_2r7yk")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=330144053]
 

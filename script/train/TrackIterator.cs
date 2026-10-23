@@ -11,6 +11,8 @@ public class TrackIterator
     private float _s; // current arc length starting from _track.InitialPose
     private Terminal _facing;
     
+    public bool IsDerailed => _track == null;
+    
     public TrackIterator()
     {
         _track = null;
