@@ -40,6 +40,13 @@ public class RailProfile
         }
     }
 
+    public void Clear()
+    {
+        _vArr = null;
+        _vtArr = null;
+        _vnArr = null;
+    }
+    
     public void ExtractProfileFrom(string filePath)
     {
         ArrayMesh am = ResourceLoader.Load<ArrayMesh>(filePath);
