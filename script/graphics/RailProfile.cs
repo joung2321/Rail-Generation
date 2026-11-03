@@ -17,7 +17,7 @@ public class RailProfile
         get { return _allowedError; }
         set { _allowedError = (value < 0)? -value: value; }
     }
-    
+
     // _vArr[2k] and _vArr[2k+1] define a edge in cross section.
     // _vtArr[i] and _vnArr[i] describe a vertex _vArr[i].
     // however, _vArr[2k+1] and _vArr[2k+2] have no relation.
@@ -40,9 +40,9 @@ public class RailProfile
         }
     }
 
-    public void Load(string path)
+    public void ExtractProfileFrom(string filePath)
     {
-        ArrayMesh am = ResourceLoader.Load<ArrayMesh>(path);
+        ArrayMesh am = ResourceLoader.Load<ArrayMesh>(filePath);
         MeshDataTool mdt = new MeshDataTool();
 
         mdt.CreateFromSurface(am, 0);

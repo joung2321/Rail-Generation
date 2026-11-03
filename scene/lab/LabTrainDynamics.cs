@@ -39,7 +39,7 @@ public partial class LabTrainDynamics : Node3D
         FresnelIntegral.Approximate(20);
 
         RailProfile rp = new RailProfile();
-        rp.Load("res://resource/railProfile.obj");
+        rp.ExtractProfileFrom("res://resource/railProfile.obj");
 
         TrackPiece[] tpArr = new TrackPiece[4];
 
