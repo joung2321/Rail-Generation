@@ -35,7 +35,7 @@ public static class UnitSpeedCurve
         return r * final_theta / MathF.Cos(pitch);
     }
 
-    public static float LengthOfClothoid(float A, float final_r, float pitch)
+    public static float LengthOfClothoid(float final_r, float A, float pitch)
     {
         if(final_r < 0) { final_r = -final_r; }
         return A * A / final_r / MathF.Cos(pitch); // A^2 = R * L
@@ -75,7 +75,7 @@ public static class UnitSpeedCurve
     // s = r * theta / cos(pitch) => C(theta).Y = r * theta * tan(pitch)
     // C'(theta)      = <r * sin(theta), r * tan(pitch), -r * cos(theta)>
     // C'(theta) / r  = <sin(theta), tan(pitch), -cos(theta)>
-    public static Pose HorizontalCurve(float s, float r, float bank, float pitch)
+    public static Pose HorizontalCurve(float s, float r, float pitch, float bank)
     {
         float theta = s * MathF.Cos(pitch) / r;
         float sin_th = MathF.Sin(theta);
@@ -90,7 +90,7 @@ public static class UnitSpeedCurve
     }
     
     // A^2 = R * L
-    public static Pose Clothoid(float s, float A, float final_r, float final_bank, float pitch)
+    public static Pose Clothoid(float s, float final_r, float A, float pitch, float final_bank)
     {
         float s_xz = s * MathF.Cos(pitch); // horizontal arc length
         float A2 = A * A;
