@@ -7,10 +7,17 @@ public class RailProfile
 {
     public enum Axis { None, X, Y, Z }
 
-    private readonly Axis _lockedAxis = Axis.None;
-    private readonly float _lockedValue;
-    private readonly float _allowedError;
+    public Axis LockedAxis = Axis.Z;
+    public float LockedValue = 0;
+    private float _allowedError = 0;
 
+    // ensure _allowedError >= 0
+    public float AllowedError
+    {
+        get { return _allowedError; }
+        set { _allowedError = (value < 0)? -value: value; }
+    }
+    
     // _vArr[2k] and _vArr[2k+1] define a edge in cross section.
     // _vtArr[i] and _vnArr[i] describe a vertex _vArr[i].
     // however, _vArr[2k+1] and _vArr[2k+2] have no relation.
@@ -22,23 +29,14 @@ public class RailProfile
     public ReadOnlySpan<Vector2> UVs => _vtArr;
     public ReadOnlySpan<Vector3> Normals => _vnArr;
 
-    public RailProfile(Axis lockedAxis, float lockedValue = 0, float allowedError = 0)
-    {
-        if(allowedError < 0) { allowedError = -allowedError; }
-
-        _lockedAxis = lockedAxis;
-        _lockedValue = lockedValue;
-        _allowedError = allowedError;
-    }
-
     private bool CheckConstraint(Vector3 v)
     {
-        switch(_lockedAxis)
+        switch(LockedAxis)
         {
             default: return false;
-            case Axis.X: return MathF.Abs(v.X - _lockedValue) <= _allowedError;
-            case Axis.Y: return MathF.Abs(v.Y - _lockedValue) <= _allowedError;
-            case Axis.Z: return MathF.Abs(v.Z - _lockedValue) <= _allowedError;
+            case Axis.X: return MathF.Abs(v.X - LockedValue) <= _allowedError;
+            case Axis.Y: return MathF.Abs(v.Y - LockedValue) <= _allowedError;
+            case Axis.Z: return MathF.Abs(v.Z - LockedValue) <= _allowedError;
         }
     }
 
