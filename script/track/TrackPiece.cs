@@ -105,13 +105,13 @@ public abstract partial class TrackPiece : MeshInstance3D
 
     public void Unlink(Terminal terminal)
     {
-        if(terminal.HasFlag(Terminal.Initial) && Prev != null)
+        if(terminal == Terminal.Initial && Prev != null)
         {
             if(Prev.Prev == this) { Prev.Prev = null; Prev.PrevTerminal = Terminal.None; }
             if(Prev.Next == this) { Prev.Next = null; Prev.NextTerminal = Terminal.None; }
         }
 
-        if(terminal.HasFlag(Terminal.Final) && Next != null)
+        if(terminal == Terminal.Final && Next != null)
         {
             if(Next.Prev == this) { Next.Prev = null; Next.PrevTerminal = Terminal.None; }
             if(Next.Next == this) { Next.Next = null; Next.NextTerminal = Terminal.None; }
@@ -120,7 +120,8 @@ public abstract partial class TrackPiece : MeshInstance3D
 
     public override void _ExitTree()
     {
-        Unlink(Terminal.Initial | Terminal.Final);
+        Unlink(Terminal.Initial);
+        Unlink(Terminal.Final);
     }
 
     // snaps a terminal to the other track piece
