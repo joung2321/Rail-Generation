@@ -128,8 +128,7 @@ public abstract partial class TrackPiece : MeshInstance3D
     public void Snap(Terminal this_terminal, TrackPiece anchor, Terminal anchor_terminal)
     {
         if(this_terminal == Terminal.None || anchor_terminal == Terminal.None
-        || anchor == null || anchor == this
-        || GetParent() != anchor.GetParent()) { return; }
+        || anchor == null || anchor == this) { return; }
 
         Pose pose_this, pose_anchor; // pose of this_terminal and anchor_terminal
         Basis axes_this;
@@ -140,7 +139,7 @@ public abstract partial class TrackPiece : MeshInstance3D
         axes_this = pose_this.Axes;
         if(this_terminal == anchor_terminal) { axes_this = Reverse(axes_this); }
 
-        Basis = anchor.Basis * Yawing(pose_anchor.Axes) * Yawing(axes_this).Transposed();
-        Position = anchor.Transform * pose_anchor.Position - Basis * pose_this.Position;
+        GlobalBasis = anchor.GlobalBasis * Yawing(pose_anchor.Axes) * Yawing(axes_this).Transposed();
+        GlobalPosition = anchor.GlobalTransform * pose_anchor.Position - Basis * pose_this.Position;
     }
 }

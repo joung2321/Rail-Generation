@@ -35,7 +35,7 @@ public class TrackIterator
     }
 
     /// <summary>
-    /// returns pose in parent space of _track
+    /// returns pose in global space
     /// </summary>
     public Pose GetPose()
     {
@@ -46,8 +46,8 @@ public class TrackIterator
 
         if(_facing == Terminal.Initial) { axes = Reverse(axes); }
 
-        pos = _track.Transform * pos;
-        axes = _track.Basis * axes;
+        pos = _track.GlobalTransform * pos;
+        axes = _track.GlobalBasis * axes;
 
         return new Pose(pos, axes, localPose.Bank, localPose.R);
     }

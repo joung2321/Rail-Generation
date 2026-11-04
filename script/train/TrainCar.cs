@@ -40,9 +40,9 @@ public partial class TrainCar : Node3D
         Pose rearPose = _ti_rear.GetPose();
 
         // carbody
-        Position = (frontPose.Position + rearPose.Position) / 2;
+        GlobalPosition = (frontPose.Position + rearPose.Position) / 2;
         LookAt(frontPose.Position, _ti_center.GetPose().Axes.Column1);
-
+        
         // front bogie
         _frontBogie.GlobalPosition = frontPose.Position;
         _frontBogie.GlobalBasis = frontPose.Axes;
