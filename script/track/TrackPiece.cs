@@ -127,7 +127,9 @@ public abstract partial class TrackPiece : MeshInstance3D
     // snaps a terminal to the other track piece
     public void Snap(Terminal this_terminal, TrackPiece anchor, Terminal anchor_terminal)
     {
-        if(anchor == null || GetParent() != anchor.GetParent()) { return; }
+        if(this_terminal == Terminal.None || anchor_terminal == Terminal.None
+        || anchor == null || anchor == this
+        || GetParent() != anchor.GetParent()) { return; }
 
         Pose pose_this, pose_anchor; // pose of this_terminal and anchor_terminal
         Basis axes_this;
