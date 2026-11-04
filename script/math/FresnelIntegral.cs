@@ -1,5 +1,3 @@
-using System;
-
 public static class FresnelIntegral
 {
     // non-zero coefficients of Maclaurin series
@@ -25,7 +23,7 @@ public static class FresnelIntegral
             ans *= x3;
             return ans;
         }
-        else { throw new InvalidOperationException("Call FresnelIntegral.Approximate() before using FresnelIntegral.S()"); }
+        else { return 0; }
     }
 
     // calculates C(x)
@@ -46,7 +44,7 @@ public static class FresnelIntegral
             ans *= x;
             return ans;
         }
-        else { throw new InvalidOperationException("Call FresnelIntegral.Approximate() before using FresnelIntegral.C()"); }
+        else { return 0; }
     }
 
     public static void Approximate(int size)
