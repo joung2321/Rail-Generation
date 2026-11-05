@@ -49,9 +49,14 @@ public partial class FpsCamera : Camera3D
         if(Input.IsKeyPressed(Key.Space)) { up++; }
         if(Input.IsKeyPressed(Key.Ctrl)) { up--; }
 
-        Vector3 v = new Vector3(right, up, -front).Normalized();
-        Position += dt * _linearSpeed * (Transform.Basis * v);
+        Vector3 dir = Transform.Basis * new Vector3(right, 0, -front);
+        dir.Y = 0;
+        dir = dir.Normalized();
+        dir = (dir + new Vector3(0, up, 0)).Normalized();
+
+        Position += dt * _linearSpeed * dir;
     }
+    
     public override void _UnhandledInput(InputEvent @event)
     {
         if(@event is InputEventMouseMotion emm)
