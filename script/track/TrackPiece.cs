@@ -68,7 +68,7 @@ public abstract partial class TrackPiece : MeshInstance3D
     /* doubly linked list */
     public void Link(Terminal this_terminal, TrackPiece other, Terminal other_terminal)
     {
-        if(other == null) { return; }
+        if(this_terminal == Terminal.None || other == null || other_terminal == Terminal.None) { return; }
         
         TrackPiece ptr_tt, ptr_ot; // pointer of this_terminal and other_terminal
 
