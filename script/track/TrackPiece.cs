@@ -32,11 +32,18 @@ public abstract partial class TrackPiece : MeshInstance3D
     public abstract Pose C(float s);
 
     /// <summary>
+    /// hook method for Bake()
+    /// </summary>
+    protected virtual void _Bake() {}
+
+    /// <summary>
     /// pre-calculates TotalLength, InitialPose, FinalPose
     /// </summary>
     /// <returns>returns itself</returns>
     public TrackPiece Bake()
     {
+        _Bake();
+
         TotalLength = CalculateTotalLength();
         InitialPose = C(0);
         FinalPose = C(TotalLength);
