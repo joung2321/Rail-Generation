@@ -39,6 +39,9 @@ public partial class EditableTrackPiece : TrackPiece
     private TrackType _type;
     private Mesh _generatedMesh;
 
+    [ExportToolButton("Print Yaw [deg]")]
+    private Callable _toolBtn_printYaw => Callable.From(PrintYaw);
+
     [ExportToolButton("Snap Initial Terminal to Prev")]
     private Callable _toolBtn_snapToPrev => Callable.From(SnapToPrev);
     [Export] private TrackPiece _prevPiece;
@@ -78,6 +81,11 @@ public partial class EditableTrackPiece : TrackPiece
             _type = value;
             NotifyPropertyListChanged();
         }
+    }
+
+    private void PrintYaw()
+    {
+        GD.Print($"# Yaw of {Name}\n- local : {RotationDegrees.Y}\n- global: {GlobalRotationDegrees.Y}");
     }
 
     private void SnapToPrev()
