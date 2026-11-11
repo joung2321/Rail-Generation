@@ -4,6 +4,9 @@
 [ext_resource type="Script" uid="uid://dtj3jnvc84k4k" path="res://script/train/TrainCar.cs" id="2_2nygj"]
 [ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="2_e5bpm"]
 [ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/lab/LargeText.tres" id="3_e5bpm"]
+[ext_resource type="Script" uid="uid://c7u37oo13sus4" path="res://script/editableTrack/EditableRailProfile.cs" id="5_1ar27"]
+[ext_resource type="Script" uid="uid://byriqeiygbts7" path="res://script/editableTrack/EditableTrackPiece.cs" id="6_4x5h1"]
+[ext_resource type="ArrayMesh" uid="uid://ccni51ogh5ggu" path="res://resource/railProfile.obj" id="6_yyec5"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_5dtft"]
 size = Vector3(0.25, 0.25, 8)
@@ -11,7 +14,7 @@ size = Vector3(0.25, 0.25, 8)
 [sub_resource type="BoxMesh" id="BoxMesh_2r7yk"]
 size = Vector3(0.5, 0.5, 0.5)
 
-[node name="LabTrainDynamics" type="Node3D" unique_id=269421330 node_paths=PackedStringArray("_labelReverser", "_labelNotch", "_labelV", "_labelPR", "_labelCR", "_labelGR", "_train")]
+[node name="LabTrainDynamics" type="Node3D" unique_id=269421330 node_paths=PackedStringArray("_labelReverser", "_labelNotch", "_labelV", "_labelPR", "_labelCR", "_labelGR", "_initialTrack", "_train")]
 script = ExtResource("1_m8a7j")
 _labelReverser = NodePath("CanvasLayer/dashboard/reverser")
 _labelNotch = NodePath("CanvasLayer/dashboard/notch")
@@ -19,7 +22,12 @@ _labelV = NodePath("CanvasLayer/dashboard/V/V_value")
 _labelPR = NodePath("CanvasLayer/resistance/PR/PR_value")
 _labelCR = NodePath("CanvasLayer/resistance/CR/CR_value")
 _labelGR = NodePath("CanvasLayer/resistance/GR/GR_value")
+_initialTrack = NodePath("railProfile/tp0")
 _train = NodePath("train")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1397996332]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 1.5, 1.5)
+script = ExtResource("2_e5bpm")
 
 [node name="sun" type="DirectionalLight3D" parent="." unique_id=1242389972]
 transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, 0)
@@ -29,20 +37,16 @@ script = ExtResource("2_2nygj")
 _frontBogie = NodePath("frontBogie")
 _rearBogie = NodePath("rearBogie")
 
-[node name="Camera3D" type="Camera3D" parent="train" unique_id=1397996332]
-transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 1.5, 1.5)
-script = ExtResource("2_e5bpm")
-
 [node name="car" type="MeshInstance3D" parent="train" unique_id=1741826157]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 mesh = SubResource("BoxMesh_5dtft")
 
 [node name="frontBogie" type="MeshInstance3D" parent="train" unique_id=496118823]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3)
 mesh = SubResource("BoxMesh_2r7yk")
 
 [node name="rearBogie" type="MeshInstance3D" parent="train" unique_id=1403754845]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
 mesh = SubResource("BoxMesh_2r7yk")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=330144053]
@@ -147,3 +151,96 @@ layout_mode = 2
 [node name="GR_unit" type="Label" parent="CanvasLayer/resistance/GR" unique_id=104341613]
 layout_mode = 2
 text = "N/t"
+
+[node name="railProfile" type="Node3D" parent="." unique_id=1913547100]
+script = ExtResource("5_1ar27")
+_mesh = ExtResource("6_yyec5")
+
+[node name="tp0" type="MeshInstance3D" parent="railProfile" unique_id=1820431643 node_paths=PackedStringArray("EditableProfile")]
+script = ExtResource("6_4x5h1")
+EditableProfile = NodePath("..")
+"horizontal length [m]" = 10.0
+"gradient [permille]" = 0.0
+
+[node name="tp1" type="MeshInstance3D" parent="railProfile" unique_id=1716903696 node_paths=PackedStringArray("_prevPiece", "EditableProfile")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+script = ExtResource("6_4x5h1")
+_prevPiece = NodePath("../tp0")
+_prevTerminal = 2
+EditableProfile = NodePath("..")
+Type = 3
+"r [m]" = -10.0
+"L [m]" = 10.0
+"gradient [permille]" = 0.0
+"cant [mm]" = 200.0
+
+[node name="tp2" type="MeshInstance3D" parent="railProfile" unique_id=492550768 node_paths=PackedStringArray("_prevPiece", "EditableProfile")]
+transform = Transform3D(0.87758255, 0, 0.47942558, 0, 1, 0, -0.47942558, 0, 0.87758255, -1.6371404, 0, -19.752876)
+script = ExtResource("6_4x5h1")
+_prevPiece = NodePath("../tp1")
+_prevTerminal = 2
+EditableProfile = NodePath("..")
+Type = 2
+"r [m]" = -10.0
+"theta [deg]" = 122.704
+"gradient [permille]" = 0.0
+"cant [mm]" = 200.0
+
+[node name="tp3" type="MeshInstance3D" parent="railProfile" unique_id=293381305 node_paths=PackedStringArray("_nextPiece", "EditableProfile")]
+transform = Transform3D(1, 0, -3.6656857e-06, 0, 1, 0, 3.6656857e-06, 0, 1, -20.82595, 0, -10.000035)
+script = ExtResource("6_4x5h1")
+_nextPiece = NodePath("../tp2")
+_nextTerminal = 2
+EditableProfile = NodePath("..")
+Type = 3
+"r [m]" = 10.0
+"L [m]" = 10.0
+"gradient [permille]" = 0.0
+"cant [mm]" = 200.0
+
+[node name="tp4" type="MeshInstance3D" parent="railProfile" unique_id=1826472640 node_paths=PackedStringArray("_prevPiece", "EditableProfile")]
+transform = Transform3D(-1, 0, 3.6656857e-06, 0, 1, 0, -3.6656857e-06, 0, -1, -20.82595, 0, -10.000035)
+script = ExtResource("6_4x5h1")
+_prevPiece = NodePath("../tp3")
+_prevTerminal = 1
+EditableProfile = NodePath("..")
+"horizontal length [m]" = 10.0
+"gradient [permille]" = 0.0
+
+[node name="tp5" type="MeshInstance3D" parent="railProfile" unique_id=322536586 node_paths=PackedStringArray("_prevPiece", "EditableProfile")]
+transform = Transform3D(-1, 0, 3.6656857e-06, 0, 1, 0, -3.6656857e-06, 0, -1, -20.825987, 0, -3.528595e-05)
+script = ExtResource("6_4x5h1")
+_prevPiece = NodePath("../tp4")
+_prevTerminal = 2
+EditableProfile = NodePath("..")
+Type = 3
+"r [m]" = -10.0
+"L [m]" = 10.0
+"gradient [permille]" = 0.0
+"cant [mm]" = 200.0
+
+[node name="tp6" type="MeshInstance3D" parent="railProfile" unique_id=485303926 node_paths=PackedStringArray("_prevPiece", "EditableProfile")]
+transform = Transform3D(-0.8775843, 0, -0.47942236, 0, 1, 0, 0.47942236, 0, -0.8775843, -19.188883, 0, 9.752848)
+script = ExtResource("6_4x5h1")
+_prevPiece = NodePath("../tp5")
+_prevTerminal = 2
+EditableProfile = NodePath("..")
+Type = 2
+"r [m]" = -10.0
+"theta [deg]" = 122.704
+"gradient [permille]" = 0.0
+"cant [mm]" = 200.0
+
+[node name="tp7" type="MeshInstance3D" parent="railProfile" unique_id=2099583385 node_paths=PackedStringArray("_prevPiece", "_nextPiece", "EditableProfile")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0)
+script = ExtResource("6_4x5h1")
+_prevPiece = NodePath("../tp0")
+_prevTerminal = 1
+_nextPiece = NodePath("../tp6")
+_nextTerminal = 2
+EditableProfile = NodePath("..")
+Type = 3
+"r [m]" = 10.0
+"L [m]" = 10.0
+"gradient [permille]" = 0.0
+"cant [mm]" = 200.0

@@ -10,6 +10,7 @@ public partial class LabTrainDynamics : Node3D
     [Export] private Label _labelCR;
     [Export] private Label _labelGR;
 
+    [Export] private TrackPiece _initialTrack;
     [Export] private TrainCar _train;
 
     // proportion of notch output
@@ -36,52 +37,13 @@ public partial class LabTrainDynamics : Node3D
     
     public override void _Ready()
     {
-        FresnelIntegral.Approximate(20);
-
-        RailProfile rp = new RailProfile();
-        rp.ExtractProfileFrom("res://resource/railProfile.obj");
-
-        TrackPiece[] tpArr = new TrackPiece[4];
-
-        tpArr[0] = new LineTrack().Define(20f, 0);
-        tpArr[1] = new HorizontalCurveTrack().Define(8f, MathF.PI, 0, 0);
-        tpArr[2] = new HorizontalCurveTrack().Define(-8f, MathF.PI, 0, 0);
-        tpArr[3] = new LineTrack().Define(20f, 0);
-
-        foreach(TrackPiece tp in tpArr)
-        {
-            tp.Bake().GenerateMesh(rp);
-            AddChild(tp);
-        }
-
-        tpArr[1].Snap(Terminal.Initial, tpArr[0], Terminal.Final);
-        tpArr[2].Snap(Terminal.Initial, tpArr[1], Terminal.Final);
-        tpArr[3].Snap(Terminal.Initial, tpArr[2], Terminal.Final);
-
-        tpArr[1].Link(Terminal.Initial, tpArr[0], Terminal.Final);
-        tpArr[2].Link(Terminal.Initial, tpArr[1], Terminal.Final);
-        tpArr[3].Link(Terminal.Initial, tpArr[2], Terminal.Final);
-
-        tpArr[0].Link(Terminal.Initial, tpArr[3], Terminal.Final);
-
-        StandardMaterial3D[] mArr = new StandardMaterial3D[tpArr.Length];
-        for(int i=0; i<mArr.Length; i++)
-        {
-            mArr[i] = new StandardMaterial3D();
-
-            if(i % 2 == 0) { mArr[i].AlbedoColor = Colors.Coral; }
-            else { mArr[i].AlbedoColor = Colors.Orange; }
-
-            tpArr[i].SetSurfaceOverrideMaterial(0, mArr[i]);
-        }
-
         // rerail a train
         _ti = new TrackIterator();
-        _ti.Rerail(tpArr[0], 0, Terminal.Final);
+        _ti.Rerail(_initialTrack, 0, Terminal.Final);
         
         // train dynamics
         // model: KORAIL Class 351000 EMU
-        _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0f);
+        _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
         _ntec = new NormalizedTractiveEffortCurve(35f, 65f);
         _nbec = new NormalizedBrakingEffortCurve(5f, 65f);
         _100pctTractiveForce_N = 1000f * 200f * (3f / 3.6f); // m = 200 t, a = 3 km/h/s
