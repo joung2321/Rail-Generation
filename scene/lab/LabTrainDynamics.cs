@@ -45,7 +45,7 @@ public partial class LabTrainDynamics : Node3D
         // model: KORAIL Class 351000 EMU
         _td = new TrainDynamics(1.435f, 2.1f, 200f, 78.48f, 1.867f, 0.0359f, 0.149f, 0.3f);
         _ntec = new NormalizedTractiveEffortCurve(35f, 65f);
-        _nbec = new NormalizedBrakingEffortCurve(5f, 65f);
+        _nbec = new NormalizedBrakingEffortCurve(65f);
         _100pctTractiveForce_N = 1000f * 200f * (3f / 3.6f); // m = 200 t, a = 3 km/h/s
         _100pctBrakingForce_N = 1000f * 200f * (3.5f / 3.6f); // m = 200 t, a = 3.5 km/h/s
 
