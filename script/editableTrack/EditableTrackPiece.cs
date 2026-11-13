@@ -141,7 +141,7 @@ public partial class EditableTrackPiece : TrackPiece
 
             case TrackType.VerticalCurve:
             AddProperty(properties, NameR);
-            AddProperty(properties, NameTheta);
+            AddProperty(properties, NameGradient);
             break;
 
             case TrackType.HorizontalCurve:
@@ -248,7 +248,8 @@ public partial class EditableTrackPiece : TrackPiece
             return;
 
             case TrackType.VerticalCurve:
-            _bakedTheta_rad = Mathf.DegToRad(_params[(int)Param.Theta]);
+            _bakedTheta_rad = MathF.Atan(_params[(int)Param.Gradient] / 1000);
+            if(_bakedTheta_rad < 0) { _bakedTheta_rad = -_bakedTheta_rad; }
             return;
 
             case TrackType.HorizontalCurve:
