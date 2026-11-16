@@ -35,7 +35,8 @@ public partial class EditableRailProfile : Node
 
             _profile.TargetZ = _targetZ;
             _profile.AllowedError = _allowedError;
-
+            _profile.Gauge_mm = _isMonorail? 0: _gauge_millimeter;
+            
             _profile.ExtractProfileFrom(_mesh.ResourcePath);
         }
         else { _profile.Clear(); }

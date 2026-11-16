@@ -10,12 +10,20 @@ public class RailProfile
 {
     public float TargetZ = 0;
     private float _allowedError = 0;
+    private float _gauge_mm = 0;
 
     // ensure _allowedError >= 0
     public float AllowedError
     {
         get { return _allowedError; }
         set { _allowedError = (value < 0)? -value: value; }
+    }
+
+    // ignore _gauge_mm < 0
+    public float Gauge_mm
+    {
+        get { return _gauge_mm; }
+        set { if(value >= 0) { _gauge_mm = value; } }
     }
 
     // _vArr[2k] and _vArr[2k+1] define a edge in cross section.
@@ -48,9 +56,12 @@ public class RailProfile
 
         mdt.CreateFromSurface(am, 0);
 
-        List<Vector3> vList = new List<Vector3>(2 * mdt.GetEdgeCount());
-        List<Vector2> vtList = new List<Vector2>(2 * mdt.GetEdgeCount());
-        List<Vector3> vnList = new List<Vector3>(2 * mdt.GetEdgeCount());
+        int listSize = 2 * mdt.GetEdgeCount();
+        if(_gauge_mm > 0) { listSize *= 2; }
+
+        List<Vector3> vList = new List<Vector3>(listSize);
+        List<Vector2> vtList = new List<Vector2>(listSize);
+        List<Vector3> vnList = new List<Vector3>(listSize);
         
         // find edges that belongs to only 1 triangle
         for(int e=0; e<mdt.GetEdgeCount(); e++)
@@ -90,6 +101,23 @@ public class RailProfile
                     }
                 }
             }
+        }
+
+        // duplicate profile
+        if(_gauge_mm > 0)
+        {
+            float halfGauge_m = _gauge_mm / (2 * 1000);
+
+            vList.AddRange(vList);
+            vtList.AddRange(vtList);
+            vnList.AddRange(vnList);
+
+            // list size
+            int full = vList.Count;
+            int half = full / 2;
+
+            for(int i=0; i<half; i++) { vList[i] += halfGauge_m * Vector3.Right; }
+            for(int i=half; i<full; i++) { vList[i] += halfGauge_m * Vector3.Left; }
         }
 
         // convert list to array
