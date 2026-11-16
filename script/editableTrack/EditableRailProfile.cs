@@ -12,8 +12,7 @@ public partial class EditableRailProfile : Node
     [ExportToolButton("Apply Changes")]
     private Callable _toolBtn_applyChanges => Callable.From(UpdateProfile);
 
-    [Export] private RailProfile.Axis _lockedAxis = RailProfile.Axis.Z;
-    [Export] private float _lockedValue = 0;
+    [Export] private float _targetZ = 0;
     [Export] private float _allowedError = 0;
     [Export] private ArrayMesh _mesh;
     [Export] private bool _isMonorail = false;
@@ -34,8 +33,7 @@ public partial class EditableRailProfile : Node
         {
             FresnelIntegral.Approximate(_fresnelIntegralSize);
 
-            _profile.LockedAxis = _lockedAxis;
-            _profile.LockedValue = _lockedValue;
+            _profile.TargetZ = _targetZ;
             _profile.AllowedError = _allowedError;
 
             _profile.ExtractProfileFrom(_mesh.ResourcePath);

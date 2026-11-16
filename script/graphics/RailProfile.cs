@@ -2,13 +2,13 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-// a class extracting cross section from mesh
+/// <summary>
+/// a class extracting cross section from mesh<br/>
+/// cutting plane: z = k
+/// </summary>
 public class RailProfile
 {
-    public enum Axis { None, X, Y, Z }
-
-    public Axis LockedAxis = Axis.Z;
-    public float LockedValue = 0;
+    public float TargetZ = 0;
     private float _allowedError = 0;
 
     // ensure _allowedError >= 0
@@ -31,13 +31,7 @@ public class RailProfile
 
     private bool CheckConstraint(Vector3 v)
     {
-        switch(LockedAxis)
-        {
-            default: return false;
-            case Axis.X: return MathF.Abs(v.X - LockedValue) <= _allowedError;
-            case Axis.Y: return MathF.Abs(v.Y - LockedValue) <= _allowedError;
-            case Axis.Z: return MathF.Abs(v.Z - LockedValue) <= _allowedError;
-        }
+        return MathF.Abs(v.Z - TargetZ) <= _allowedError;
     }
 
     public void Clear()
