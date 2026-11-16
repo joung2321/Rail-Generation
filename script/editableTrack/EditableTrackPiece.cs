@@ -104,6 +104,7 @@ public partial class EditableTrackPiece : TrackPiece
 
         Bake(); // pre-calculates TotalLength, InitialPose, FinalPose
         GenerateMesh(_editableProfile.Profile, _editableProfile.SamplingDistance_m);
+        Mesh.SurfaceSetMaterial(0, EditableProfile.Profile.Material);
     }
     
     private void UnsubscribeProfile()

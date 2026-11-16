@@ -37,6 +37,8 @@ public class RailProfile
     public ReadOnlySpan<Vector2> UVs => _vtArr;
     public ReadOnlySpan<Vector3> Normals => _vnArr;
 
+    public Material Material;
+
     private bool CheckConstraint(Vector3 v)
     {
         return MathF.Abs(v.Z - TargetZ) <= _allowedError;
@@ -124,5 +126,8 @@ public class RailProfile
         _vArr = vList.ToArray();
         _vtArr = vtList.ToArray();
         _vnArr = vnList.ToArray();
+
+        // store material
+        Material = am.SurfaceGetMaterial(0);
     }
 }
