@@ -19,3 +19,5 @@ mono_crash.*.json
 
 # Keep assets directory clean
 assets/*.import
+.blend
+.blend1
