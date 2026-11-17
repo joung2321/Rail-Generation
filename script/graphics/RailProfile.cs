@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// a class extracting cross section from mesh<br/>
-/// cutting plane: z = k
+/// cutting plane: z = RailProfile.TargetZ
 /// </summary>
 public class RailProfile
 {
