@@ -19,15 +19,31 @@ public static class RailMeshGenerator
         List<Vector3> mesh_vnList = new List<Vector3>(vCount);
         List<int> mesh_idxList = new List<int>(6 * (poses.Length - 1) * (profile_vArr.Length / 2));
 
+        // UV flow direction
+        Vector2 dUV = Vector2.Zero;
+        if(profile.FlowAxis == RailProfile.UVAxis.U) { dUV.X = 1f; }
+        else if(profile.FlowAxis == RailProfile.UVAxis.V) { dUV.Y = 1f; }
+
+        // cumulative distance
+        float s = 0;
+
         for(int i=0; i<poses.Length; i++)
         {
+            // ds for UV flow
+            float ds = 0;
+            if(i > 0)
+            {
+                ds = (poses[i].Position - poses[i-1].Position).Length();
+                s += ds;
+            }
+
             // if let v[i] = profile_vArr[i],
             // then v[2k] and v[2k+1] define a edge.
             // however, v[2k+1] and v[2k+2] have no relation.
             for(int j=0; j<profile_vArr.Length; j++)
             {
                 mesh_vList.Add(poses[i].Position + poses[i].Axes * profile_vArr[j]);
-                mesh_vtList.Add(profile_vtArr[j]);
+                mesh_vtList.Add(profile_vtArr[j] + profile.UVPerMeter * s * dUV); // UV flow
                 mesh_vnList.Add(poses[i].Axes * profile_vnArr[j]);
 
                 // indexing

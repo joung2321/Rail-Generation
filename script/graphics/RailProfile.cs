@@ -8,9 +8,14 @@ using System.Collections.Generic;
 /// </summary>
 public class RailProfile
 {
+    public enum UVAxis { None, U, V };
+
     public float TargetZ = 0;
     private float _allowedError = 0;
     private float _gauge_mm = 0;
+    
+    public UVAxis FlowAxis = UVAxis.None;
+    public float UVPerMeter = 1f;
 
     // ensure _allowedError >= 0
     public float AllowedError
@@ -36,8 +41,6 @@ public class RailProfile
     public ReadOnlySpan<Vector3> Vertices => _vArr;
     public ReadOnlySpan<Vector2> UVs => _vtArr;
     public ReadOnlySpan<Vector3> Normals => _vnArr;
-
-    public Material Material;
 
     private bool CheckConstraint(Vector3 v)
     {
@@ -126,8 +129,5 @@ public class RailProfile
         _vArr = vList.ToArray();
         _vtArr = vtList.ToArray();
         _vnArr = vnList.ToArray();
-
-        // store material
-        Material = am.SurfaceGetMaterial(0);
     }
 }
