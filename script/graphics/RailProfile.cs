@@ -94,13 +94,21 @@ public class RailProfile
 
                     if(isValid[fv0] && isValid[fv1])
                     {
+                        Vector3 vertex;
+
                         // fv0
-                        vList.Add(faceVertexArr[fv0]);
+                        vertex = faceVertexArr[fv0];
+                        vertex.Z = 0;
+
+                        vList.Add(vertex);
                         vtList.Add(mdt.GetVertexUV(fvArr[fv0]));
                         vnList.Add(mdt.GetVertexNormal(fvArr[fv0]));
 
                         // fv1
-                        vList.Add(faceVertexArr[fv1]);
+                        vertex = faceVertexArr[fv1];
+                        vertex.Z = 0;
+
+                        vList.Add(vertex);
                         vtList.Add(mdt.GetVertexUV(fvArr[fv1]));
                         vnList.Add(mdt.GetVertexNormal(fvArr[fv1]));
                     }
