@@ -1,3 +1,6 @@
+using Godot;
+using System;
+
 public partial class HorizontalCurveTrack : TrackPiece
 {
     private float _r;
@@ -6,13 +9,13 @@ public partial class HorizontalCurveTrack : TrackPiece
     private float _bank;
 
     /// <returns>returns itself</returns>
-    public TrackPiece Define(float r, float final_theta, float pitch, float bank)
+    public TrackPiece Define(float r_m, float theta_deg, float gradient_permille, float cant_mm, float gauge_mm = 1435f)
     {
-        _r = r;
-        _final_theta = final_theta;
-        _pitch = pitch;
-        _bank = bank;
-
+        _r = r_m;
+        _final_theta = Mathf.DegToRad(theta_deg);
+        _pitch = MathF.Atan(gradient_permille / 1000);
+        _bank = MathF.Asin(cant_mm / gauge_mm);
+        
         return this;
     }
 

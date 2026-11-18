@@ -1,13 +1,16 @@
+using System;
+
 public partial class VerticalCurveTrack : TrackPiece
 {
     private float _r;
     private float _final_theta;
 
     /// <returns>returns itself</returns>
-    public TrackPiece Define(float r, float final_theta)
+    public TrackPiece Define(float r_m, float gradient_permille)
     {
-        _r = r;
-        _final_theta = final_theta;
+        _r = r_m;
+        _final_theta = MathF.Atan(gradient_permille / 1000);
+        if(_final_theta < 0) { _final_theta = -_final_theta; }
 
         return this;
     }

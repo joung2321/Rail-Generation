@@ -6,10 +6,10 @@ public partial class LineTrack : TrackPiece
     private float _final_h;
 
     /// <returns>returns itself</returns>
-    public TrackPiece Define(float final_s_xz, float final_h)
+    public TrackPiece Define(float horizontalLength_m, float gradient_permille)
     {
-        _final_s_xz = final_s_xz;
-        _final_h = final_h;
+        _final_s_xz = horizontalLength_m;
+        _final_h = horizontalLength_m * gradient_permille / 1000;
 
         return this;
     }

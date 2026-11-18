@@ -1,3 +1,5 @@
+using System;
+
 public partial class ClothoidTrack : TrackPiece
 {
     private float _final_r;
@@ -6,13 +8,17 @@ public partial class ClothoidTrack : TrackPiece
     private float _final_bank;
 
     /// <returns>returns itself</returns>
-    public TrackPiece Define(float final_r, float A, float pitch, float final_bank)
+    public TrackPiece Define(float R_m, float L_m, float gradient_permille, float cant_mm, float gauge_mm = 1435f)
     {
-        _final_r = final_r;
-        _A = A;
-        _pitch = pitch;
-        _final_bank = final_bank;
-        
+        _final_r = R_m;
+        _pitch = MathF.Atan(gradient_permille / 1000);
+        _final_bank = MathF.Asin(cant_mm / gauge_mm);
+
+        // A^2 = R * L
+        float A2 = R_m * L_m; // A^2
+        if(A2 < 0) { A2 = -A2; }
+        _A = MathF.Sqrt(A2);
+
         return this;
     }
 
