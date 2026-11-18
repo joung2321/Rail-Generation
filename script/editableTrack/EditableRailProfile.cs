@@ -17,8 +17,8 @@ public partial class EditableRailProfile : Node
     [Export] private float _allowedError = 0;
     [Export] private ArrayMesh _mesh;
 
-    // texture
-    [Export] private Material _material;
+    // material
+    [Export] private StandardMaterial3D _material;
     [Export] private RailProfile.UVAxis _flowAxis = RailProfile.UVAxis.None;
     [Export] private float _UVPerMeter = 1f;
 
@@ -28,7 +28,7 @@ public partial class EditableRailProfile : Node
     [Export] private float _samplingDistance_meter = 0.5f;
     [Export] private int _fresnelIntegralSize = 4;
 
-    public Material Material => _material;
+    public StandardMaterial3D Material => _material;
     public float Gauge_mm => _gauge_millimeter;
     public float SamplingDistance_m => _samplingDistance_meter;
 
