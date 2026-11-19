@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://bs75qqqhutkpm"]
 
 [ext_resource type="Script" uid="uid://gk4wnpf6ko6g" path="res://scene/lab/LabTrainDynamics.cs" id="1_m8a7j"]
-[ext_resource type="Script" uid="uid://dtj3jnvc84k4k" path="res://script/train/TrainCar.cs" id="2_2nygj"]
-[ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://script/utility/FpsCamera.cs" id="2_e5bpm"]
+[ext_resource type="Script" uid="uid://dtj3jnvc84k4k" path="res://addons/RailGeneration/train/TrainCar.cs" id="2_2nygj"]
+[ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://addons/RailGeneration/utility/FpsCamera.cs" id="2_e5bpm"]
 [ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/lab/LargeText.tres" id="3_e5bpm"]
-[ext_resource type="Script" uid="uid://c7u37oo13sus4" path="res://script/editableTrack/EditableRailProfile.cs" id="5_1ar27"]
-[ext_resource type="Script" uid="uid://byriqeiygbts7" path="res://script/editableTrack/EditableTrackPiece.cs" id="6_4x5h1"]
+[ext_resource type="Script" uid="uid://c7u37oo13sus4" path="res://addons/RailGeneration/editableTrack/EditableRailProfile.cs" id="5_1ar27"]
+[ext_resource type="Script" uid="uid://byriqeiygbts7" path="res://addons/RailGeneration/editableTrack/EditableTrackPiece.cs" id="6_4x5h1"]
 [ext_resource type="ArrayMesh" uid="uid://ccni51ogh5ggu" path="res://resource/railProfile.obj" id="6_yyec5"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_5dtft"]
