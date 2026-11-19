@@ -1,3 +1,5 @@
+namespace RailGeneration;
+
 /// <summary>
 /// normalized tractive effort curve with max(F_tractive) = 1
 /// </summary>

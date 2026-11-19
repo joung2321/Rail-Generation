@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using RailGeneration;
+using RailGeneration.Common;
 
 public partial class LabTrainDynamics : Node3D
 {

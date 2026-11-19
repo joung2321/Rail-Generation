@@ -1,4 +1,7 @@
+namespace RailGeneration;
+
 using System;
+using RailGeneration.Common;
 
 public partial class ClothoidTrack : TrackPiece
 {

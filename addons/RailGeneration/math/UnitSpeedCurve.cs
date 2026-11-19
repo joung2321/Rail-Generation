@@ -1,5 +1,8 @@
-using System;
+namespace RailGeneration;
+
 using Godot;
+using System;
+using RailGeneration.Common;
 
 // class providing curves C(s) parameterized by arc length s
 // C(0) is always zero vector.

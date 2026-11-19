@@ -1,5 +1,8 @@
+namespace RailGeneration;
+
 using Godot;
 using System;
+using RailGeneration.Common;
 
 public partial class HorizontalCurveTrack : TrackPiece
 {

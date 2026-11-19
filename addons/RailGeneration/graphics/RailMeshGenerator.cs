@@ -1,6 +1,9 @@
+namespace RailGeneration;
+
 using Godot;
 using System;
 using System.Collections.Generic;
+using RailGeneration.Common;
 
 public static class RailMeshGenerator
 {

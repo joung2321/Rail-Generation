@@ -1,6 +1,9 @@
-using System;
+namespace RailGeneration;
+
 using Godot;
 using Godot.Collections;
+using System;
+using RailGeneration.Common;
 
 [Tool]
 public partial class EditableTrackPiece : TrackPiece

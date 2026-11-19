@@ -1,3 +1,5 @@
+namespace RailGeneration.Utility;
+
 using Godot;
 using System;
 

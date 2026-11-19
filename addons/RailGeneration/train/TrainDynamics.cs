@@ -1,5 +1,7 @@
+namespace RailGeneration;
+
 using System;
-using Godot;
+using RailGeneration.Common;
 
 public class TrainDynamics
 {

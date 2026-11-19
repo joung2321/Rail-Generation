@@ -1,4 +1,6 @@
-using Godot;
+namespace RailGeneration;
+
+using RailGeneration.Common;
 
 public partial class LineTrack : TrackPiece
 {

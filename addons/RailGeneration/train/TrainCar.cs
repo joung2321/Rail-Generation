@@ -1,4 +1,7 @@
+namespace RailGeneration;
+
 using Godot;
+using RailGeneration.Common;
 
 public partial class TrainCar : Node3D
 {

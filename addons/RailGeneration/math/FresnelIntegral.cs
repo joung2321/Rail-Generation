@@ -1,3 +1,5 @@
+namespace RailGeneration;
+
 public static class FresnelIntegral
 {
     // non-zero coefficients of Maclaurin series

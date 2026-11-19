@@ -1,3 +1,5 @@
+namespace RailGeneration.Common;
+
 using Godot;
 using System;
 
