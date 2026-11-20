@@ -1,40 +1,40 @@
 <div align="center">
 <img alt="icon" src="./assets/icon.svg" />
-<h1 align="center">Rail Generation Test</h1>
+<h1 align="center">Rail Generation</h1>
 </div>
 
-A simple project testing procedural generation of railway
+A Godot addon for procedural generation of railway
 
-This project demonstrates :
-- extracting edges on XY plane from mesh
+This addon features :
+- extracting edges from a seamless mesh (*.obj) with constraints Z = k
 - mesh extrusion using extracted edges and unit speed curve
+- simple railway vehicle dynamics
+- WYSIWYG track designing on Godot editor
 
-This project defines 4 types of unit speed curves :
+This addon defines 4 types of unit speed curves :
 - line
 - vertical curve (arc)
 - horizontal curve (helix)
 - Clothoid (a.k.a. Euler spiral)
-## 🛠️How to Use
+## 🛠️How to Build
 (1) Clone this repository.
 ```bash
 git clone https://github.com/joung2321/Rail-Generation.git
 ```
 (2) Open **project.godot**  
-(3) Run a main scene, **LabRailProfile.tscn**
-## 📖Script Description
-### 📐script/math
-|Name|Description|
-|-|-|
-|FresnelIntegral.cs|calculates Fresnel integral S(x) and C(x) using Maclaurin series. Call FresnelIntegral.Approximate() first.|
-|UnitSpeedCurve.cs|defines 4 types of unit speed curve C(s). These curves return a **Pose** (position and rotation) for each arc length s.|
-### 🗿script/graphics
-|Name|Description|
-|-|-|
-|RailProfile.cs|extracts edges with constraints Z = k (or X = k, Y = k).|
-|RailMeshGenerator.cs|extrudes a RailProfile along a unit speed curve.|
-### 🧰script/utility
-|Name|Description|
-|-|-|
-|FpsCamera.cs|A simple first person camera.|
+(3) Build Project  
+(4) Open and run a main scene, **DemoOvalTrack.tscn**
+<p>
+<img src="./assets/img_EditableRailProfile.png" width="49%">
+<img src="./assets/img_DemoOvalTrack.png" width="49%">
+</p>
+
+## 🎢Track Design Guide
+To be added.  
+Please refer to **DemoOvalTrack.tscn** for now.
+<p>
+<img src="./assets/img_EditableTrackPiece.png">
+</p>
+
 ## 📄License
 This project is released under the MIT License.
