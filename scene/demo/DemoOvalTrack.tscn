@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bs75qqqhutkpm"]
 
-[ext_resource type="Script" uid="uid://7v3fbsdsywxw" path="res://scene/lab/LabTrainDynamics.cs" id="1_m8a7j"]
+[ext_resource type="Script" uid="uid://7v3fbsdsywxw" path="res://scene/demo/DemoOvalTrack.cs" id="1_m8a7j"]
 [ext_resource type="Script" uid="uid://bxxi6oumha3vu" path="res://addons/RailGeneration/train/TrainCar.cs" id="2_2nygj"]
 [ext_resource type="Script" uid="uid://bsbnb68lw8w43" path="res://addons/RailGeneration/utility/FpsCamera.cs" id="2_e5bpm"]
-[ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/lab/LargeText.tres" id="3_e5bpm"]
+[ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/demo/LargeText.tres" id="3_e5bpm"]
 [ext_resource type="Script" uid="uid://c5fg2rshfhm7i" path="res://addons/RailGeneration/editableTrack/EditableRailProfile.cs" id="5_1ar27"]
 [ext_resource type="Script" uid="uid://d14dsian1e2t1" path="res://addons/RailGeneration/editableTrack/EditableTrackPiece.cs" id="6_4x5h1"]
 [ext_resource type="ArrayMesh" uid="uid://b3wodsyilvsl5" path="res://resource/rp.obj" id="6_yyec5"]
@@ -15,7 +15,7 @@ size = Vector3(0.25, 0.25, 8)
 [sub_resource type="BoxMesh" id="BoxMesh_2r7yk"]
 size = Vector3(0.5, 0.5, 0.5)
 
-[node name="LabTrainDynamics" type="Node3D" unique_id=269421330 node_paths=PackedStringArray("_labelReverser", "_labelNotch", "_labelV", "_labelPR", "_labelCR", "_labelGR", "_initialTrack", "_train")]
+[node name="DemoOvalTrack" type="Node3D" unique_id=269421330 node_paths=PackedStringArray("_labelReverser", "_labelNotch", "_labelV", "_labelPR", "_labelCR", "_labelGR", "_initialTrack", "_train")]
 script = ExtResource("1_m8a7j")
 _labelReverser = NodePath("CanvasLayer/dashboard/reverser")
 _labelNotch = NodePath("CanvasLayer/dashboard/notch")

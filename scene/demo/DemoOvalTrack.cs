@@ -3,7 +3,7 @@ using System;
 using RailGeneration;
 using RailGeneration.Common;
 
-public partial class LabTrainDynamics : Node3D
+public partial class DemoOvalTrack : Node3D
 {
     [Export] private Label _labelReverser;
     [Export] private Label _labelNotch;
