@@ -17,7 +17,7 @@ public class RailProfile
     private float _gauge_mm = 0;
     
     public UVAxis FlowAxis = UVAxis.None;
-    public float UVPerMeter = 1f;
+    public float UVPerMeter { get; private set; } = 1f;
 
     // ensure _allowedError >= 0
     public float AllowedError
@@ -31,6 +31,11 @@ public class RailProfile
     {
         get { return _gauge_mm; }
         set { if(value >= 0) { _gauge_mm = value; } }
+    }
+
+    public float MeshLength
+    {
+        set { if(value > 0) { UVPerMeter = 1 / value; } }
     }
 
     // _vArr[2k] and _vArr[2k+1] define a edge in cross section.

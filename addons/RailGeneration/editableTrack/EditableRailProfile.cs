@@ -15,17 +15,17 @@ public partial class EditableRailProfile : Node
     private Callable _toolBtn_applyChanges => Callable.From(UpdateProfile);
 
     // mesh
+    [Export] private ArrayMesh _seamlessMesh;
     [Export] private float _targetZ = 0;
     [Export] private float _allowedError = 0;
-    [Export] private ArrayMesh _mesh;
+    [Export] private float _meshLength = 1f;
 
     // material
     [Export] private StandardMaterial3D _material;
     [Export] private RailProfile.UVAxis _flowAxis = RailProfile.UVAxis.None;
-    [Export] private float _UVPerMeter = 1f;
-
+    
     // procedural generation
-    [Export] private bool _isMonorail = false;
+    [Export] private bool _duplicateProfile = false;
     [Export] private float _gauge_millimeter = 1435f;
     [Export] private float _samplingDistance_meter = 0.5f;
     [Export] private int _fresnelIntegralSize = 4;
@@ -41,17 +41,18 @@ public partial class EditableRailProfile : Node
 
     private void UpdateProfile()
     {
-        if(_mesh != null)
+        if(_seamlessMesh != null)
         {
             FresnelIntegral.Approximate(_fresnelIntegralSize);
             
             _profile.TargetZ = _targetZ;
             _profile.AllowedError = _allowedError;
-            _profile.FlowAxis = _flowAxis;
-            _profile.UVPerMeter = _UVPerMeter;
-            _profile.Gauge_mm = _isMonorail? 0: _gauge_millimeter;
+            _profile.MeshLength = _meshLength;
 
-            _profile.ExtractProfileFrom(_mesh.ResourcePath);
+            _profile.FlowAxis = _flowAxis;
+            _profile.Gauge_mm = _duplicateProfile? _gauge_millimeter: 0;
+
+            _profile.ExtractProfileFrom(_seamlessMesh.ResourcePath);
         }
         else { _profile.Clear(); }
         

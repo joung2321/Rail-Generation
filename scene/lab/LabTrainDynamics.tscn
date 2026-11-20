@@ -1,12 +1,13 @@
 [gd_scene format=3 uid="uid://bs75qqqhutkpm"]
 
-[ext_resource type="Script" uid="uid://gk4wnpf6ko6g" path="res://scene/lab/LabTrainDynamics.cs" id="1_m8a7j"]
-[ext_resource type="Script" uid="uid://dtj3jnvc84k4k" path="res://addons/RailGeneration/train/TrainCar.cs" id="2_2nygj"]
-[ext_resource type="Script" uid="uid://c8jobivqoq8eo" path="res://addons/RailGeneration/utility/FpsCamera.cs" id="2_e5bpm"]
+[ext_resource type="Script" uid="uid://7v3fbsdsywxw" path="res://scene/lab/LabTrainDynamics.cs" id="1_m8a7j"]
+[ext_resource type="Script" uid="uid://bxxi6oumha3vu" path="res://addons/RailGeneration/train/TrainCar.cs" id="2_2nygj"]
+[ext_resource type="Script" uid="uid://bsbnb68lw8w43" path="res://addons/RailGeneration/utility/FpsCamera.cs" id="2_e5bpm"]
 [ext_resource type="Theme" uid="uid://d0r7yxoahu8q7" path="res://scene/lab/LargeText.tres" id="3_e5bpm"]
-[ext_resource type="Script" uid="uid://c7u37oo13sus4" path="res://addons/RailGeneration/editableTrack/EditableRailProfile.cs" id="5_1ar27"]
-[ext_resource type="Script" uid="uid://byriqeiygbts7" path="res://addons/RailGeneration/editableTrack/EditableTrackPiece.cs" id="6_4x5h1"]
-[ext_resource type="ArrayMesh" uid="uid://ccni51ogh5ggu" path="res://resource/railProfile.obj" id="6_yyec5"]
+[ext_resource type="Script" uid="uid://c5fg2rshfhm7i" path="res://addons/RailGeneration/editableTrack/EditableRailProfile.cs" id="5_1ar27"]
+[ext_resource type="Script" uid="uid://d14dsian1e2t1" path="res://addons/RailGeneration/editableTrack/EditableTrackPiece.cs" id="6_4x5h1"]
+[ext_resource type="ArrayMesh" uid="uid://b3wodsyilvsl5" path="res://resource/rp.obj" id="6_yyec5"]
+[ext_resource type="Material" uid="uid://cy7slxbuqkvnk" path="res://resource/rp_mat.tres" id="7_q4wfj"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_5dtft"]
 size = Vector3(0.25, 0.25, 8)
@@ -154,7 +155,10 @@ text = "N/t"
 
 [node name="railProfile" type="Node3D" parent="." unique_id=1913547100]
 script = ExtResource("5_1ar27")
-_mesh = ExtResource("6_yyec5")
+_seamlessMesh = ExtResource("6_yyec5")
+_meshLength = 2.5
+_material = ExtResource("7_q4wfj")
+_flowAxis = 2
 
 [node name="tp0" type="MeshInstance3D" parent="railProfile" unique_id=1820431643 node_paths=PackedStringArray("EditableProfile")]
 script = ExtResource("6_4x5h1")
