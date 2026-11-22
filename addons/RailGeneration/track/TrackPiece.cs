@@ -159,7 +159,8 @@ public abstract partial class TrackPiece : MeshInstance3D
         axes_this = pose_this.Axes;
         if(this_terminal == anchor_terminal) { axes_this = Reverse(axes_this); }
 
-        GlobalBasis = anchor.GlobalBasis * Yawing(pose_anchor.Axes) * Yawing(axes_this).Transposed();
+        // GlobalBasis = anchor.GlobalBasis * Yawing(pose_anchor.Axes) * Yawing(axes_this).Transposed();
+        GlobalBasis = anchor.GlobalBasis * pose_anchor.Axes * axes_this.Transposed();
         GlobalPosition = anchor.GlobalTransform * pose_anchor.Position - Basis * pose_this.Position;
     }
 }
