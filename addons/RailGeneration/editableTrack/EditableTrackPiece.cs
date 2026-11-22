@@ -240,6 +240,7 @@ public partial class EditableTrackPiece : TrackPiece
     
     public override void _ExitTree()
     {
+        base._ExitTree();
         UnsubscribeProfile();
     }
 
