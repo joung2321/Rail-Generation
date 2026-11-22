@@ -318,7 +318,9 @@ public partial class EditableTrackPiece : TrackPiece
         if(_type == TrackType.Line)
         {
             Pose[] poses = { InitialPose, FinalPose };
-            Mesh = RailMeshGenerator.GenerateMesh(_editableProfile.Profile, poses);
+            float[] cumulativeDistances = { 0, TotalLength };
+
+            Mesh = RailMeshGenerator.GenerateMesh(_editableProfile.Profile, poses, cumulativeDistances);
         }
         else
         {

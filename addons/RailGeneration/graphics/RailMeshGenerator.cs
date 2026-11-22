@@ -7,7 +7,7 @@ using RailGeneration.Common;
 
 public static class RailMeshGenerator
 {
-    public static ArrayMesh GenerateMesh(RailProfile profile, Pose[] poses)
+    public static ArrayMesh GenerateMesh(RailProfile profile, Pose[] poses, float[] cumulativeDistances)
     {
         ReadOnlySpan<Vector3> profile_vArr = profile.Vertices;
         ReadOnlySpan<Vector2> profile_vtArr = profile.UVs;
@@ -27,26 +27,15 @@ public static class RailMeshGenerator
         if(profile.FlowAxis == RailProfile.UVAxis.U) { dUV.X = 1f; }
         else if(profile.FlowAxis == RailProfile.UVAxis.V) { dUV.Y = 1f; }
 
-        // cumulative distance
-        float s = 0;
-
         for(int i=0; i<poses.Length; i++)
         {
-            // ds for UV flow
-            float ds = 0;
-            if(i > 0)
-            {
-                ds = (poses[i].Position - poses[i-1].Position).Length();
-                s += ds;
-            }
-
             // if let v[i] = profile_vArr[i],
             // then v[2k] and v[2k+1] define a edge.
             // however, v[2k+1] and v[2k+2] have no relation.
             for(int j=0; j<profile_vArr.Length; j++)
             {
                 mesh_vList.Add(poses[i].Position + poses[i].Axes * profile_vArr[j]);
-                mesh_vtList.Add(profile_vtArr[j] + profile.UVPerMeter * s * dUV); // UV flow
+                mesh_vtList.Add(profile_vtArr[j] + profile.UVPerMeter * cumulativeDistances[i] * dUV); // UV flow
                 mesh_vnList.Add(poses[i].Axes * profile_vnArr[j]);
 
                 // indexing

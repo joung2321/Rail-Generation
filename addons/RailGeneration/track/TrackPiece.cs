@@ -60,19 +60,29 @@ public abstract partial class TrackPiece : MeshInstance3D
         if(poseCount < 2) { return; }
 
         Pose[] poses = new Pose[poseCount];
+        float[] cumulativeDistances = new float[poseCount];
 
         // fill array
         poses[0] = InitialPose;
+        cumulativeDistances[0] = 0;
 
         for(int i=1; i<poseCount; i++)
         {
             float s = ds * i;
 
-            if(s < TotalLength) { poses[i] = C(s); }
-            else { poses[i] = FinalPose; }
+            if(s < TotalLength)
+            {
+                poses[i] = C(s);
+                cumulativeDistances[i] = s;
+            }
+            else
+            {
+                poses[i] = FinalPose;
+                cumulativeDistances[i] = TotalLength;
+            }
         }
 
-        Mesh = RailMeshGenerator.GenerateMesh(profile, poses);
+        Mesh = RailMeshGenerator.GenerateMesh(profile, poses, cumulativeDistances);
     }
 
     /* doubly linked list */
