@@ -14,6 +14,9 @@ public class TrackIterator
     private float _s; // current arc length starting from _track.InitialPose
     private Terminal _facing;
     
+    public TrackPiece Track => _track;
+    public float S => _s;
+    public Terminal Facing => _facing;
     public bool IsDerailed => _track == null;
     
     public TrackIterator()
@@ -42,6 +45,8 @@ public class TrackIterator
     /// </summary>
     public Pose GetPose()
     {
+        if(_track == null) { throw new InvalidOperationException("derailed TrackIterator"); }
+
         Pose localPose = _track.C(_s);
 
         Vector3 pos = localPose.Position;
@@ -61,12 +66,19 @@ public class TrackIterator
         {
             _s += (_facing == Terminal.Final)? ds: -ds;
 
-            // go to prev
-            if(_s < 0 && _track.Prev != null)
+            if(_s < 0) // go to prev
             {
                 // remaining ds (keep sign of ds)
                 if(ds > 0) { ds = -_s; }
                 else { ds = _s; }
+
+                // derailed
+                if(_track.Prev == null)
+                {
+                    Derailed?.Invoke();
+                    _track = null;
+                    break;
+                }
 
                 // update s
                 if(_track.PrevTerminal == Terminal.Initial) { _s = 0; }
@@ -75,14 +87,22 @@ public class TrackIterator
                 // update facing
                 if(_track.PrevTerminal == Terminal.Initial) { _facing = (_facing == Terminal.Initial)? Terminal.Final: Terminal.Initial; }
 
+                // update track
                 _track = _track.Prev;
             }
-            // go to next
-            else if(_s > _track.TotalLength && _track.Next != null)
+            else if(_s > _track.TotalLength) // go to next
             {
                 // remaining ds (keep sign of ds)
                 if(ds > 0) { ds = _s - _track.TotalLength; }
                 else { ds = _track.TotalLength - _s; }
+
+                // derailed
+                if(_track.Next == null)
+                {
+                    Derailed?.Invoke();
+                    _track = null;
+                    break;
+                }
 
                 // update s
                 if(_track.NextTerminal == Terminal.Initial) { _s = 0; }
@@ -91,6 +111,7 @@ public class TrackIterator
                 // update facing
                 if(_track.NextTerminal == Terminal.Final) { _facing = (_facing == Terminal.Initial)? Terminal.Final: Terminal.Initial; }
 
+                // update track
                 _track = _track.Next;
             }
             else
@@ -98,7 +119,5 @@ public class TrackIterator
                 break;
             }
         }
-
-        if(_track == null) { Derailed?.Invoke(); }
     }
 }
