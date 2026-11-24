@@ -23,7 +23,7 @@ public class TrackIterator
     {
         _track = null;
         _s = 0;
-        _facing = Terminal.None;
+        _facing = Terminal.Final;
     }
 
     public void Rerail(TrackPiece track, float s, Terminal facing)

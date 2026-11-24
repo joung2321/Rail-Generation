@@ -19,8 +19,8 @@ public abstract partial class TrackPiece : MeshInstance3D
     public TrackPiece Prev { get; private set; } = null;
     public TrackPiece Next { get; private set; } = null;
 
-    public Terminal PrevTerminal { get; private set; } = Terminal.None;
-    public Terminal NextTerminal { get; private set; } = Terminal.None;
+    public Terminal PrevTerminal { get; private set; }
+    public Terminal NextTerminal { get; private set; }
 
     /// <summary>
     /// TODO: calculate and return TotalLength using this.CurveShape
@@ -88,7 +88,7 @@ public abstract partial class TrackPiece : MeshInstance3D
     /* doubly linked list */
     public void Link(Terminal this_terminal, TrackPiece other, Terminal other_terminal)
     {
-        if(this_terminal == Terminal.None || other == null || other_terminal == Terminal.None) { return; }
+        if(other == null) { return; }
         
         TrackPiece ptr_tt, ptr_ot; // pointer of this_terminal and other_terminal
 
@@ -127,14 +127,14 @@ public abstract partial class TrackPiece : MeshInstance3D
     {
         if(terminal == Terminal.Initial && Prev != null)
         {
-            if(Prev.Prev == this) { Prev.Prev = null; Prev.PrevTerminal = Terminal.None; }
-            if(Prev.Next == this) { Prev.Next = null; Prev.NextTerminal = Terminal.None; }
+            if(Prev.Prev == this) { Prev.Prev = null; }
+            if(Prev.Next == this) { Prev.Next = null; }
         }
 
         if(terminal == Terminal.Final && Next != null)
         {
-            if(Next.Prev == this) { Next.Prev = null; Next.PrevTerminal = Terminal.None; }
-            if(Next.Next == this) { Next.Next = null; Next.NextTerminal = Terminal.None; }
+            if(Next.Prev == this) { Next.Prev = null; }
+            if(Next.Next == this) { Next.Next = null; }
         }
     }
 
@@ -147,8 +147,7 @@ public abstract partial class TrackPiece : MeshInstance3D
     // snaps a terminal to the other track piece
     public void Snap(Terminal this_terminal, TrackPiece anchor, Terminal anchor_terminal)
     {
-        if(this_terminal == Terminal.None || anchor_terminal == Terminal.None
-        || anchor == null || anchor == this) { return; }
+        if(anchor == null || anchor == this) { return; }
 
         Pose pose_this, pose_anchor; // pose of this_terminal and anchor_terminal
         Basis axes_this;

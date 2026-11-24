@@ -2,7 +2,6 @@ namespace RailGeneration.Common;
 
 public enum Terminal
 {
-    None,
     Initial,
     Final
 }
